@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EnvelopeIntro } from "@/components/scenes/EnvelopeIntro";
-import { BarzakhScene } from "@/components/scenes/BarzakhScene";
+//  import { BarzakhScene } from "@/components/scenes/BarzakhScene";
 import { CitiesDrawingScene } from "@/components/scenes/CitiesDrawingScene";
 import { MeetingSeal } from "@/components/scenes/MeetingSeal";
 import { InvitationCard } from "@/components/scenes/InvitationCard";
@@ -43,7 +43,7 @@ export default function WeddingInvitation() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <BarzakhScene />
+            
             <CitiesDrawingScene />
             <MeetingSeal />
             <InvitationCard />
