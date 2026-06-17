@@ -1,65 +1,56 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { EnvelopeIntro } from "@/components/scenes/EnvelopeIntro";
+import { BarzakhScene } from "@/components/scenes/BarzakhScene";
+import { CitiesDrawingScene } from "@/components/scenes/CitiesDrawingScene";
+import { MeetingSeal } from "@/components/scenes/MeetingSeal";
+import { InvitationCard } from "@/components/scenes/InvitationCard";
+import { ClosingBlessing } from "@/components/scenes/ClosingBlessing";
+
+export default function WeddingInvitation() {
+  const [isOpened, setIsOpened] = useState(false);
+
+  // Lock scroll while envelope is showing
+  useEffect(() => {
+    document.body.style.overflow = isOpened ? "" : "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpened]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main dir="rtl">
+      {/* Scene 1 — Envelope (fixed overlay until tapped) */}
+      <AnimatePresence>
+        {!isOpened && (
+          <motion.div
+            key="envelope"
+            className="fixed inset-0 z-50"
+            exit={{ opacity: 0, scale: 1.04 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <EnvelopeIntro onOpen={() => setIsOpened(true)} isOpened={false} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Scenes 2–6 — revealed after envelope opens */}
+      <AnimatePresence>
+        {isOpened && (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <BarzakhScene />
+            <CitiesDrawingScene />
+            <MeetingSeal />
+            <InvitationCard />
+            <ClosingBlessing />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </main>
   );
 }

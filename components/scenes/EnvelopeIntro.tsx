@@ -1,0 +1,229 @@
+"use client";
+
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { GoldParticles } from "@/components/ui/GoldParticles";
+import { invitationData } from "@/data/invitation";
+
+interface EnvelopeIntroProps {
+  onOpen: () => void;
+  isOpened: boolean;
+}
+
+function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
+  return (
+    <div className="relative w-full h-full">
+      {/* Envelope body */}
+      <svg
+        viewBox="0 0 320 220"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full drop-shadow-lg"
+        aria-hidden="true"
+      >
+        {/* Envelope back */}
+        <rect x="2" y="2" width="316" height="216" rx="4" fill="#F2E8D0" stroke="#D4B96A" strokeWidth="1" />
+
+        {/* Bottom triangle fold */}
+        <path d="M2 218 L160 130 L318 218 Z" fill="#EBE0C4" stroke="#D4B96A" strokeWidth="0.5" />
+
+        {/* Side triangles */}
+        <path d="M2 2 L2 218 L160 130 Z" fill="#E6D5AF" stroke="#D4B96A" strokeWidth="0.5" />
+        <path d="M318 2 L318 218 L160 130 Z" fill="#E8D8B5" stroke="#D4B96A" strokeWidth="0.5" />
+
+        {/* Islamic geometric pattern on body */}
+        <g opacity="0.2" stroke="#B8943F" strokeWidth="0.5">
+          <rect x="20" y="20" width="280" height="180" rx="2" fill="none" />
+          <rect x="30" y="30" width="260" height="160" rx="1" fill="none" strokeDasharray="4 4" />
+          {/* Star of 8 */}
+          <path d="M160 60 L166 74 L181 74 L169 83 L174 97 L160 88 L146 97 L151 83 L139 74 L154 74 Z" fill="none" />
+        </g>
+
+        {/* Envelope flap (top triangle) — animates open */}
+        <motion.path
+          d={isOpen ? "M2 2 L160 100 L318 2 Z" : "M2 2 L160 110 L318 2 Z"}
+          fill={isOpen ? "#F8F3E6" : "#EDE3CA"}
+          stroke="#D4B96A"
+          strokeWidth="1"
+          animate={{
+            d: isOpen ? "M2 2 L160 -80 L318 2 Z" : "M2 2 L160 110 L318 2 Z",
+          }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        />
+
+        {/* Fold line on flap */}
+        <motion.line
+          x1="2" y1="2" x2="318" y2="2"
+          stroke="#D4B96A"
+          strokeWidth="1"
+          opacity="0.6"
+        />
+      </svg>
+
+      {/* Gold wax seal */}
+      <motion.div
+        className="absolute left-1/2 -translate-x-1/2"
+        style={{ bottom: "38%" }}
+        animate={isOpen ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center"
+          style={{
+            background: "radial-gradient(circle at 40% 35%, #ECD99A, #B8943F 60%, #8B6914)",
+            boxShadow: "0 2px 8px rgba(184,148,63,0.5), inset 0 1px 2px rgba(255,255,255,0.3)",
+            animation: "envelope-seal-pulse 2s ease-in-out infinite",
+          }}
+        >
+          <span
+            className="text-[#FAF7F0] text-lg select-none"
+            style={{ fontFamily: "serif", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
+          >
+            إ
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
+  const [hinted, setHinted] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHinted(true), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
+  function handleClick() {
+    if (localOpen) return;
+    setLocalOpen(true);
+    // Let the flap animate (~1s) before transitioning
+    setTimeout(() => onOpen(), 950);
+  }
+
+  return (
+    <section
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      style={{ background: "linear-gradient(160deg, #FAF7F0 0%, #F5EDD6 50%, #F0E4C8 100%)" }}
+    >
+      {/* Subtle background geometric pattern */}
+      <div className="absolute inset-0 opacity-[0.03]" aria-hidden="true">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="geo" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+              <path d="M40 0 L80 40 L40 80 L0 40 Z" stroke="#B8943F" strokeWidth="1" fill="none" />
+              <path d="M40 10 L70 40 L40 70 L10 40 Z" stroke="#B8943F" strokeWidth="0.5" fill="none" />
+              <circle cx="40" cy="40" r="8" stroke="#B8943F" strokeWidth="0.5" fill="none" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#geo)" />
+        </svg>
+      </div>
+
+      {/* Top decorative line */}
+      <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{ scaleX: 1, opacity: 1 }}
+        transition={{ duration: 1.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute top-8 left-8 right-8 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
+        aria-hidden="true"
+      />
+
+      {/* Envelope container */}
+      <motion.div
+        className="relative z-10 flex flex-col items-center"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Names above envelope */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 1 }}
+          className="mb-8 text-center"
+        >
+          <p
+            className="text-sm tracking-widest uppercase font-body"
+            style={{ color: "#8C7B6A", letterSpacing: "0.3em" }}
+          >
+            دعوة زفاف
+          </p>
+        </motion.div>
+
+        {/* The Envelope */}
+        <motion.button
+          className="relative w-72 h-48 sm:w-80 sm:h-52 md:w-96 md:h-64 cursor-pointer focus:outline-none"
+          onClick={handleClick}
+          whileHover={localOpen ? {} : { scale: 1.02 }}
+          whileTap={localOpen ? {} : { scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          aria-label="افتح الدعوة"
+          style={{
+            filter: "drop-shadow(0 8px 24px rgba(28,18,9,0.12))",
+          }}
+        >
+          <EnvelopeSVG isOpen={localOpen} />
+          {localOpen && <GoldParticles count={22} active={localOpen} />}
+        </motion.button>
+
+        {/* Hint text */}
+        <AnimatePresence>
+          {!localOpen && hinted && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.6 }}
+              className="mt-8 flex flex-col items-center gap-2"
+            >
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M10 3 L10 17 M5 12 L10 17 L15 12" stroke="#B8943F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </motion.div>
+              <p
+                className="font-body text-sm"
+                style={{ color: "#8C7B6A" }}
+              >
+                {invitationData.openEnvelopePrompt}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Bottom decorative line */}
+      <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{ scaleX: 1, opacity: 1 }}
+        transition={{ duration: 1.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute bottom-8 left-8 right-8 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
+        aria-hidden="true"
+      />
+
+      {/* Corner ornaments */}
+      {["top-6 right-6 rotate-0", "top-6 left-6 rotate-90", "bottom-6 left-6 rotate-180", "bottom-6 right-6 -rotate-90"].map((pos, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.4, scale: 1 }}
+          transition={{ delay: 0.8 + i * 0.1, duration: 0.6 }}
+          className={`absolute ${pos}`}
+          aria-hidden="true"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M2 2 L10 2 L2 10" stroke="#B8943F" strokeWidth="1" strokeLinecap="round" />
+          </svg>
+        </motion.div>
+      ))}
+    </section>
+  );
+}

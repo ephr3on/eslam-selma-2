@@ -1,26 +1,152 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ─── Design Tokens ─── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Color palette */
+  --color-ivory:          #FAF7F0;
+  --color-papyrus:        #F2E8D0;
+  --color-papyrus-dark:   #E6D5AF;
+  --color-gold:           #B8943F;
+  --color-gold-light:     #D4B96A;
+  --color-gold-pale:      #ECD99A;
+  --color-lapis:          #2A4A72;
+  --color-lapis-light:    #4A6E9E;
+  --color-desert-rose:    #C17A5E;
+  --color-terracotta:     #A65C3E;
+  --color-mediterranean:  #4A7C6E;
+  --color-ink:            #1C1209;
+  --color-ink-soft:       #3D2E1E;
+  --color-ink-muted:      #6B5A47;
+  --color-smoke:          #8C7B6A;
+
+  /* Typography */
+  --font-display:  "Amiri", "Noto Naskh Arabic", Georgia, serif;
+  --font-body:     "Cairo", "Tajawal", system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-paper: 0 2px 16px 0 rgba(28,18,9,0.08), 0 1px 4px 0 rgba(28,18,9,0.06);
+  --shadow-card:  0 8px 40px 0 rgba(28,18,9,0.12), 0 2px 8px 0 rgba(28,18,9,0.08);
+  --shadow-gold:  0 0 32px 0 rgba(184,148,63,0.18);
+  --shadow-lift:  0 16px 64px 0 rgba(28,18,9,0.16);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FAF7F0;
+  color: #1C1209;
+  font-family: "Cairo", "Tajawal", system-ui, sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Font Classes ─── */
+.font-display {
+  font-family: "Amiri", "Noto Naskh Arabic", Georgia, serif;
+}
+
+.font-body {
+  font-family: "Cairo", "Tajawal", system-ui, sans-serif;
+}
+
+/* ─── Paper Grain Texture via CSS noise ─── */
+.paper-texture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+/* ─── Gold Shimmer ─── */
+@keyframes gold-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    105deg,
+    #B8943F 0%,
+    #D4B96A 40%,
+    #ECD99A 50%,
+    #D4B96A 60%,
+    #B8943F 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 4s linear infinite;
+}
+
+/* ─── Float Animation ─── */
+@keyframes float-up {
+  0%   { transform: translateY(0) scale(1); opacity: 0; }
+  15%  { opacity: 0.8; }
+  85%  { opacity: 0.4; }
+  100% { transform: translateY(-80px) scale(0.6); opacity: 0; }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.05); }
+}
+
+@keyframes ink-fade-in {
+  from { opacity: 0; filter: blur(4px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+@keyframes envelope-seal-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,148,63,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(184,148,63,0); }
+}
+
+/* ─── Ornamental Divider ─── */
+.ornament-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #B8943F;
+}
+
+.ornament-line::before,
+.ornament-line::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D4B96A, transparent);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #F2E8D0; }
+::-webkit-scrollbar-thumb { background: #D4B96A; border-radius: 2px; }
+
+/* ─── Selection ─── */
+::selection { background: #ECD99A; color: #1C1209; }
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
