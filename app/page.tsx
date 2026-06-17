@@ -43,7 +43,7 @@ export default function WeddingInvitation() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            
+            {/* <BarzakhScene /> */}
             <CitiesDrawingScene />
             <MeetingSeal />
             <InvitationCard />
