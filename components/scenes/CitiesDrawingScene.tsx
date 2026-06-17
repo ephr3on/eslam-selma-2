@@ -202,7 +202,7 @@ function TunisiaMap({ inView }: { inView: boolean }) {
       ))}
 
       {/* Medina gateway — refined arch */}
-      <motion.path
+      {/* <motion.path
         d="M58 220 L58 175 Q58 155 72 155 Q86 155 86 175 L86 220"
         stroke="#8C7B6A"
         strokeWidth="1.4"
@@ -210,8 +210,8 @@ function TunisiaMap({ inView }: { inView: boolean }) {
         initial={{ pathLength: 0, opacity: 0 }}
         animate={inView ? { pathLength: 1, opacity: 0.32 } : {}}
         transition={{ duration: 1.5, delay: 0.9 }}
-      />
-      <motion.path
+      /> */}
+      {/* <motion.path
         d="M58 175 Q72 160 86 175"
         stroke="#8C7B6A"
         strokeWidth="1.4"
@@ -219,7 +219,7 @@ function TunisiaMap({ inView }: { inView: boolean }) {
         initial={{ pathLength: 0, opacity: 0 }}
         animate={inView ? { pathLength: 1, opacity: 0.35 } : {}}
         transition={{ duration: 0.8, delay: 1.5 }}
-      />
+      /> */}
       {/* Arch keystone dot */}
       <motion.circle
         cx="72" cy="160" r="2.5"
