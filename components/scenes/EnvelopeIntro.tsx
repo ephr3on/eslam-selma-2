@@ -88,19 +88,16 @@ function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
         transition={{ duration: 0.4 }}
       >
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center"
+          className="w-8 h-8 rounded-full flex items-center justify-center"
           style={{
             background: "radial-gradient(circle at 40% 35%, #ECD99A, #B8943F 60%, #8B6914)",
             boxShadow: "0 2px 8px rgba(184,148,63,0.5), inset 0 1px 2px rgba(255,255,255,0.3)",
             animation: "envelope-seal-pulse 2s ease-in-out infinite",
           }}
         >
-          <span
-            className="text-[#FAF7F0] text-sm select-none"
-            style={{ fontFamily: "serif", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
-          >
-            إ♥س
-          </span>
+          <svg width="12" height="11" viewBox="0 0 12 11" fill="none" aria-hidden="true">
+            <path d="M6 10.5C6 10.5 0.5 6.5 0.5 3.5C0.5 1.84 1.84 0.5 3.5 0.5C4.5 0.5 5.36 1 6 1.78C6.64 1 7.5 0.5 8.5 0.5C10.16 0.5 11.5 1.84 11.5 3.5C11.5 6.5 6 10.5 6 10.5Z" fill="rgba(250,247,240,0.9)" />
+          </svg>
         </div>
       </motion.div>
     </div>

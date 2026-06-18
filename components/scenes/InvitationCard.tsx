@@ -331,16 +331,16 @@ export function InvitationCard() {
           aria-hidden="true"
         />
         <div
-          className="relative w-20 h-20 rounded-full flex items-center justify-center"
+          className="relative w-12 h-12 rounded-full flex items-center justify-center"
           style={{
             background: "radial-gradient(circle at 40% 35%, #FDFAF3, #F2E8D0 80%)",
             border: "1px solid rgba(201,168,76,0.35)",
             boxShadow: "0 2px 20px rgba(184,148,63,0.12), inset 0 1px 3px rgba(255,255,255,0.6)",
           }}
         >
-          <span className="font-names select-none" style={{ color: "#B8943F", fontSize: "1rem" }}>
-            {invitationData.names.monogram}
-          </span>
+          <svg width="18" height="16" viewBox="0 0 12 11" fill="none" aria-hidden="true">
+            <path d="M6 10.5C6 10.5 0.5 6.5 0.5 3.5C0.5 1.84 1.84 0.5 3.5 0.5C4.5 0.5 5.36 1 6 1.78C6.64 1 7.5 0.5 8.5 0.5C10.16 0.5 11.5 1.84 11.5 3.5C11.5 6.5 6 10.5 6 10.5Z" fill="#B8943F" />
+          </svg>
         </div>
       </motion.div>
     </section>
