@@ -27,9 +27,8 @@ export default function WeddingInvitation() {
     // 3500 ms (photo rises) + 3000 ms (photo stands) = 6500 ms
     setTimeout(() => {
       setIsTransitioning(true);
-      // White layer peaks at ~1350 ms (delay 0.65s + duration 0.7s).
-      // Switch the scene then — hidden under full white — so the cut is invisible.
-      setTimeout(() => setIsOpened(true), 1350);
+      // Glow reaches full opacity at 1000 ms — switch scene then, hidden under it.
+      setTimeout(() => setIsOpened(true), 1000);
     }, 6500);
   }
 
@@ -86,68 +85,22 @@ export default function WeddingInvitation() {
           </motion.button>
         )}
       </AnimatePresence>
-      {/* ── Cinematic glow transition — three fixed layers ────────────────
-          Build phase: each layer fades in with a staggered delay (no
-          keyframe flickers).  The white peaks at ~1350 ms, at which point
-          the scene switches invisibly underneath.
-          Reveal phase: white lingers longest (2.5 s), cream next (2.0 s),
-          gold fades first (1.5 s) — the new scene emerges slowly beneath.  */}
-
-      {/* Layer 1 — deep golden bloom (starts immediately) */}
+      {/* Single glow transition — warm golden radial that fades in over 1 s,
+          holds while the scene switches, then melts away over 1.8 s.       */}
       {isTransitioning && (
         <motion.div
           className="fixed inset-0 pointer-events-none"
           style={{
             zIndex: 60,
             background:
-              "radial-gradient(ellipse 100% 90% at 50% 48%, rgba(255,210,80,0.8) 0%, rgba(212,175,80,0.55) 24%, rgba(180,145,55,0.22) 52%, transparent 72%)",
+              "radial-gradient(ellipse 120% 110% at 50% 50%, rgba(255,248,220,1) 0%, rgba(255,236,170,0.92) 22%, rgba(240,210,130,0.65) 46%, rgba(210,175,90,0.25) 68%, transparent 88%)",
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: isOpened ? 0 : 1 }}
           transition={
             isOpened
-              ? { duration: 1.5, ease: "easeInOut" }
+              ? { duration: 1.8, ease: [0.4, 0, 0.2, 1] }
               : { duration: 1.0, ease: "easeOut" }
-          }
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Layer 2 — warm cream aura (starts 0.35 s in) */}
-      {isTransitioning && (
-        <motion.div
-          className="fixed inset-0 pointer-events-none"
-          style={{
-            zIndex: 61,
-            background:
-              "radial-gradient(ellipse 170% 150% at 50% 46%, rgba(255,255,235,0.97) 0%, rgba(255,250,210,0.85) 14%, rgba(248,235,180,0.65) 28%, rgba(236,212,140,0.4) 46%, rgba(220,190,100,0.12) 64%, transparent 82%)",
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isOpened ? 0 : 1 }}
-          transition={
-            isOpened
-              ? { duration: 2.0, ease: "easeInOut" }
-              : { duration: 1.0, delay: 0.35, ease: "easeOut" }
-          }
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Layer 3 — white flash (starts 0.65 s in, peaks at ~1350 ms) */}
-      {isTransitioning && (
-        <motion.div
-          className="fixed inset-0 pointer-events-none"
-          style={{
-            zIndex: 62,
-            background:
-              "radial-gradient(ellipse 160% 140% at 50% 46%, rgba(255,255,255,1) 0%, rgba(255,252,228,0.96) 16%, rgba(255,245,195,0.65) 34%, rgba(245,225,155,0.22) 56%, transparent 76%)",
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isOpened ? 0 : 1 }}
-          transition={
-            isOpened
-              ? { duration: 2.5, ease: [0.4, 0, 0.2, 1] }
-              : { duration: 0.7, delay: 0.65, ease: [0.22, 1, 0.36, 1] }
           }
           aria-hidden="true"
         />
@@ -162,7 +115,7 @@ export default function WeddingInvitation() {
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.4 }}
           >
             <EnvelopeIntro
               onStampClick={handleStampClick}
@@ -177,9 +130,9 @@ export default function WeddingInvitation() {
         {isOpened && (
           <motion.div
             key="content"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
           >
             {/* <BarzakhScene /> */}
             <CitiesDrawingScene />
