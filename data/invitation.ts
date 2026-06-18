@@ -3,7 +3,7 @@ export const invitationData = {
     ar: "إسلام و سلمى",
     groom: "إسلام",
     bride: "سلمى",
-    monogram: "إ & س",
+    monogram: "إ ♥ س",
   },
   origins: {
     groom: "الشرقية، مصر",

@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { invitationData } from "@/data/invitation";
 import { buildGoogleCalendarUrl, generateICS } from "@/lib/utils";
 import { IslamicGeometryLine } from "@/components/ui/OrnamentalDivider";
-import { StaggeredLines } from "@/components/ui/AnimatedArabicText";
 
 const buttonStyle = {
   primary: {
@@ -316,18 +315,34 @@ export function InvitationCard() {
         <CardInner />
       </div>
 
-      {/* Poetic lines around the card */}
-      <StaggeredLines
-        lines={[
-          "من الشرقية إلى سوسة،",
-          "رُسم الطريق بالحبر والضوء",
-        ]}
-        className="mt-10 text-center z-10"
-        lineClassName="font-display text-sm py-0.5"
-        staggerDelay={0.2}
-        baseDelay={0.3}
-        variant="ink"
-      />
+      {/* Monogram seal */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.9, delay: 1.8, type: "spring", stiffness: 180, damping: 18 }}
+        className="relative z-10 mt-10"
+      >
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          style={{ border: "1px solid rgba(201,168,76,0.35)", margin: "-6px" }}
+          animate={{ scale: [1, 1.12, 1], opacity: [0.5, 0, 0.5] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          aria-hidden="true"
+        />
+        <div
+          className="relative w-20 h-20 rounded-full flex items-center justify-center"
+          style={{
+            background: "radial-gradient(circle at 40% 35%, #FDFAF3, #F2E8D0 80%)",
+            border: "1px solid rgba(201,168,76,0.35)",
+            boxShadow: "0 2px 20px rgba(184,148,63,0.12), inset 0 1px 3px rgba(255,255,255,0.6)",
+          }}
+        >
+          <span className="font-names select-none" style={{ color: "#B8943F", fontSize: "1rem" }}>
+            {invitationData.names.monogram}
+          </span>
+        </div>
+      </motion.div>
     </section>
   );
 }
