@@ -584,10 +584,10 @@ export function CitiesDrawingScene() {
         </svg>
       </div>
 
-      {/* Narrative text — replaces static heading */}
+      {/* Narrative text — fixed height prevents layout shift when pairs swap */}
       <div
-        className="relative z-10 mb-10 w-full flex items-center justify-center"
-        style={{ minHeight: "5.5rem" }}
+        className="relative z-10 mb-10 w-full"
+        style={{ height: "8rem" }}
         aria-live="polite"
         aria-atomic="true"
       >
@@ -596,7 +596,7 @@ export function CitiesDrawingScene() {
             /* Pre-narrative: static heading shown until story begins */
             <motion.div
               key="pre"
-              className="flex flex-col items-center text-center gap-1"
+              className="absolute inset-0 flex flex-col items-center justify-center text-center gap-1"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -613,7 +613,7 @@ export function CitiesDrawingScene() {
             /* Narrative pairs 0–4 */
             <motion.div
               key={narrativeIndex}
-              className="flex flex-col items-center text-center gap-0.5 px-6"
+              className="absolute inset-0 flex flex-col items-center justify-center text-center gap-0.5 px-6"
               initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               exit={narrativeIndex < 4 ? { opacity: 0, transition: { duration: 0.65, ease: "easeInOut" } } : undefined}
