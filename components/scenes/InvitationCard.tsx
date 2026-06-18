@@ -295,7 +295,7 @@ function CardInner() {
 export function InvitationCard() {
   return (
     <section
-      className="relative flex flex-col items-center justify-center py-12 sm:min-h-screen sm:py-20 px-4 overflow-hidden"
+      className="relative flex flex-col items-center justify-center pt-12 pb-8 sm:min-h-screen sm:py-20 px-4 overflow-hidden"
       style={{ background: "linear-gradient(180deg, #F5EDD6 0%, #EDE4D0 30%, #F5EDD6 100%)" }}
     >
       {/* Subtle background pattern */}
@@ -321,7 +321,7 @@ export function InvitationCard() {
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.9, delay: 1.8, type: "spring", stiffness: 180, damping: 18 }}
-        className="relative z-10 mt-4"
+        className="relative z-10 mt-8"
       >
         <motion.div
           className="absolute inset-0 rounded-full"
