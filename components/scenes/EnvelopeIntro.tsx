@@ -79,6 +79,15 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
   const [localOpen, setLocalOpen] = useState(false);
   const [stampClicked, setStampClicked] = useState(false);
   const [photoVisible, setPhotoVisible] = useState(false);
+  // Mobile (< 640 px): rise less so the photo stays near the envelope middle
+  const [photoY, setPhotoY] = useState(-96);
+
+  useEffect(() => {
+    const update = () => setPhotoY(window.innerWidth < 640 ? -60 : -96);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setHinted(true), 2000);
@@ -174,7 +183,7 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
                       "0 16px 48px rgba(0,0,0,0.45), 0 0 0 2px rgba(212,185,106,0.6)",
                   }}
                   initial={{ y: 0, clipPath: "inset(100% 0 0 0)" }}
-                  animate={{ y: -96, clipPath: "inset(0% 0 0 0)" }}
+                  animate={{ y: photoY, clipPath: "inset(0% 0 0 0)" }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 3.5, ease: [0.22, 1, 0.36, 1] }}
                 >

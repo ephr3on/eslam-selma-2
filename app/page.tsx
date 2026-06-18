@@ -15,11 +15,11 @@ export default function WeddingInvitation() {
 
   function handleStampClick() {
     if (isTransitioning) return;
-    // 3500 ms (photo rises) + 5000 ms (photo stands) = 8500 ms
+    // 3500 ms (photo rises) + 3000 ms (photo stands) = 6500 ms
     setTimeout(() => {
       setIsTransitioning(true);
-      setTimeout(() => setIsOpened(true), 1800);
-    }, 8500);
+      setTimeout(() => setIsOpened(true), 900);
+    }, 6500);
   }
 
   // Lock scroll while envelope is showing
@@ -48,8 +48,8 @@ export default function WeddingInvitation() {
           animate={isOpened ? { opacity: 0 } : { opacity: [0, 1, 0.75, 1] }}
           transition={
             isOpened
-              ? { duration: 1.6, ease: "easeOut" }
-              : { duration: 0.9, times: [0, 0.35, 0.6, 1], ease: "easeOut" }
+              ? { duration: 0.8, ease: "easeOut" }
+              : { duration: 0.5, times: [0, 0.35, 0.6, 1], ease: "easeOut" }
           }
           aria-hidden="true"
         />
@@ -76,8 +76,8 @@ export default function WeddingInvitation() {
           animate={isOpened ? { opacity: 0 } : { opacity: [0, 0, 1] }}
           transition={
             isOpened
-              ? { duration: 2, ease: "easeOut" }
-              : { duration: 1.1, times: [0, 0.38, 1], ease: [0.22, 1, 0.36, 1] }
+              ? { duration: 1.0, ease: "easeOut" }
+              : { duration: 0.6, times: [0, 0.38, 1], ease: [0.22, 1, 0.36, 1] }
           }
           aria-hidden="true"
         />
@@ -103,8 +103,8 @@ export default function WeddingInvitation() {
           animate={isOpened ? { opacity: 0 } : { opacity: [0, 0, 0, 1] }}
           transition={
             isOpened
-              ? { duration: 2.4, ease: [0.4, 0, 0.2, 1] }
-              : { duration: 1.3, times: [0, 0.45, 0.65, 1], ease: [0.22, 1, 0.36, 1] }
+              ? { duration: 1.2, ease: [0.4, 0, 0.2, 1] }
+              : { duration: 0.7, times: [0, 0.45, 0.65, 1], ease: [0.22, 1, 0.36, 1] }
           }
           aria-hidden="true"
         />
