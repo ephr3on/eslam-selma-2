@@ -784,11 +784,9 @@ export function CitiesDrawingScene() {
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 1.4, delay: 3.2, ease: "easeOut" }}
       >
-        <br />
         من الشرقية إلى سوسة
         <br />
         ومن ضفتي الحلم إلى جمال الواقع
-        <br />
       </motion.p>
 
     </section>
