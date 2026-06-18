@@ -372,14 +372,18 @@ function TunisiaMap({ inView }: { inView: boolean }) {
 }
 
 export function CitiesDrawingScene() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-5% 0px" });
-  const eslamControls = useAnimation();
-  const selmaControls = useAnimation();
+  const ref            = useRef<HTMLDivElement>(null);
+  const inView         = useInView(ref, { once: true, margin: "-5% 0px" });
+  const eslamControls  = useAnimation();
+  const selmaControls  = useAnimation();
+  // Refs for live position tracking
+  const eslamPhotoRef  = useRef<HTMLDivElement>(null);
+  const selmaPhotoRef  = useRef<HTMLDivElement>(null);
+  const canvasRef      = useRef<HTMLCanvasElement>(null);
 
+  // ── Orbit animation (starts after maps finish drawing) ─────────────────
   useEffect(() => {
     if (!inView) return;
-    // Wait for the maps to finish drawing (~2.5 s), then start the orbit
     const timer = setTimeout(() => {
       const shared = {
         duration: 6,
@@ -387,31 +391,165 @@ export function CitiesDrawingScene() {
         ease: "easeInOut" as const,
         times: [0, 0.25, 0.5, 0.75, 1],
       };
-      // Eslam arcs UPWARD — clockwise relative to centre
-      eslamControls.start({
-        x: [0, 10, 0, -10, 0],
-        y: [0, -14, -22, -14, 0],
-        scale: [1, 1.06, 1.10, 1.06, 1],
-        rotate: [0, 4, 0, -4, 0],
-        transition: shared,
-      });
-      // Selma arcs DOWNWARD — counter-clockwise, exactly opposite
-      selmaControls.start({
-        x: [0, -10, 0, 10, 0],
-        y: [0, 14, 22, 14, 0],
-        scale: [1, 1.06, 1.10, 1.06, 1],
-        rotate: [0, -4, 0, 4, 0],
-        transition: shared,
-      });
+      eslamControls.start({ x:[0,10,0,-10,0], y:[0,-14,-22,-14,0], scale:[1,1.06,1.10,1.06,1], rotate:[0,4,0,-4,0], transition: shared });
+      selmaControls.start({ x:[0,-10,0,10,0], y:[0,14,22,14,0],   scale:[1,1.06,1.10,1.06,1], rotate:[0,-4,0,4,0], transition: shared });
     }, 2800);
     return () => clearTimeout(timer);
   }, [inView, eslamControls, selmaControls]);
+
+  // ── Heart trail canvas animation ────────────────────────────────────────
+  useEffect(() => {
+    if (!inView) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Size the canvas bitmap to the element's CSS size × DPR
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = canvas.offsetWidth  * dpr;
+    canvas.height = canvas.offsetHeight * dpr;
+    // Cast so TypeScript sees non-null types inside nested closures
+    const cv  = canvas as HTMLCanvasElement;
+    const ctx = cv.getContext("2d") as CanvasRenderingContext2D;
+    if (!ctx) return;
+    ctx.scale(dpr, dpr);
+
+    // ── types ──────────────────────────────────────────────────────────────
+    type Heart = {
+      t: number;      // 0 → 1 progress
+      speed: number;  // progress per ms
+      r: number;      // "radius" of the heart shape
+      dir: 0 | 1;     // 0 = Eslam → Selma,  1 = Selma → Eslam
+    };
+
+    const hearts: Heart[] = [];
+    let phase = 0;   // 0=idle  1=Eslam sending  2=both sending
+    let raf   = 0;
+    let lastTs = 0;
+    let acc1 = 0, acc2 = 380; // acc2 offset so streams interleave nicely
+
+    const SPAWN_MS   = 680;   // ms between each heart
+    const TRAVEL_MS  = 2500;  // ms for one heart to cross
+
+    // Returns portrait centre in canvas CSS-pixel space (accounts for orbit transform)
+    function centre(el: HTMLElement): { x: number; y: number } {
+      const er = el.getBoundingClientRect();
+      const cr = cv.getBoundingClientRect();
+      return { x: er.left + er.width  / 2 - cr.left,
+               y: er.top  + er.height / 2 - cr.top };
+    }
+
+    // Small elegant heart centred at (cx, cy)
+    function heart(cx: number, cy: number, r: number, alpha: number, fill: string, glow: string) {
+      ctx.save();
+      ctx.globalAlpha  = alpha;
+      ctx.shadowBlur   = 18;
+      ctx.shadowColor  = glow;
+      ctx.fillStyle    = fill;
+      ctx.beginPath();
+      // cleft at top, tip at bottom — r is half the heart height
+      ctx.moveTo(cx, cy + r * 0.32);
+      ctx.bezierCurveTo(cx, cy - r * 0.55, cx - r * 1.1, cy - r * 0.55, cx - r * 1.1, cy);
+      ctx.bezierCurveTo(cx - r * 1.1, cy + r * 0.78, cx, cy + r * 1.18, cx, cy + r * 1.46);
+      ctx.bezierCurveTo(cx, cy + r * 1.18, cx + r * 1.1, cy + r * 0.78, cx + r * 1.1, cy);
+      ctx.bezierCurveTo(cx + r * 1.1, cy - r * 0.55, cx, cy - r * 0.55, cx, cy + r * 0.32);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function frame(ts: number) {
+      const dt = lastTs === 0 ? 0 : Math.min(ts - lastTs, 50);
+      lastTs = ts;
+
+      ctx.clearRect(0, 0, cv.offsetWidth, cv.offsetHeight);
+
+      const eEl = eslamPhotoRef.current;
+      const sEl = selmaPhotoRef.current;
+      if (!eEl || !sEl) { raf = requestAnimationFrame(frame); return; }
+
+      const eC = centre(eEl);
+      const sC = centre(sEl);
+
+      // ── spawn ────────────────────────────────────────────────────────────
+      if (phase >= 1) {
+        acc1 += dt;
+        while (acc1 >= SPAWN_MS) {
+          acc1 -= SPAWN_MS;
+          hearts.push({ t: 0, speed: 1 / TRAVEL_MS, r: 4 + Math.random() * 3, dir: 0 });
+        }
+      }
+      if (phase >= 2) {
+        acc2 += dt;
+        while (acc2 >= SPAWN_MS) {
+          acc2 -= SPAWN_MS;
+          hearts.push({ t: 0, speed: 1 / TRAVEL_MS, r: 4 + Math.random() * 3, dir: 1 });
+        }
+      }
+
+      // ── update + draw ────────────────────────────────────────────────────
+      for (let i = hearts.length - 1; i >= 0; i--) {
+        const h = hearts[i];
+        h.t += h.speed * dt;
+        if (h.t >= 1) { hearts.splice(i, 1); continue; }
+
+        const srcC = h.dir === 0 ? eC : sC;
+        const dstC = h.dir === 0 ? sC : eC;
+
+        // Push origin & destination outward by portrait radius so hearts
+        // emerge from the photo edge rather than from under the portrait.
+        const PORTRAIT_R = 54; // px — 48 (radius) + a few px margin
+        const fullDist = Math.hypot(dstC.x - srcC.x, dstC.y - srcC.y);
+        const nx = fullDist > 1 ? (dstC.x - srcC.x) / fullDist : 1;
+        const ny = fullDist > 1 ? (dstC.y - srcC.y) / fullDist : 0;
+        const src = { x: srcC.x + nx * PORTRAIT_R, y: srcC.y + ny * PORTRAIT_R };
+        const dst = { x: dstC.x - nx * PORTRAIT_R, y: dstC.y - ny * PORTRAIT_R };
+
+        // Bézier control points — arc above for dir 0, below for dir 1
+        const mx = (src.x + dst.x) / 2;
+        const my = (src.y + dst.y) / 2;
+        const dist = Math.hypot(dst.x - src.x, dst.y - src.y);
+        const bend = dist * 0.45 * (h.dir === 0 ? -1 : 1);
+
+        const cp1 = { x: src.x * 0.55 + mx * 0.45, y: my + bend * 0.85 };
+        const cp2 = { x: mx * 0.45 + dst.x * 0.55, y: my + bend * 0.85 };
+
+        const mt = 1 - h.t;
+        const px = mt*mt*mt*src.x + 3*mt*mt*h.t*cp1.x + 3*mt*h.t*h.t*cp2.x + h.t*h.t*h.t*dst.x;
+        const py = mt*mt*mt*src.y + 3*mt*mt*h.t*cp1.y + 3*mt*h.t*h.t*cp2.y + h.t*h.t*h.t*dst.y;
+
+        // Fade in first 15 %, out last 15 %
+        const alpha = h.t < 0.15 ? (h.t / 0.15) * 0.88
+                    : h.t > 0.85 ? ((1 - h.t) / 0.15) * 0.88
+                    : 0.88;
+
+        const fill = h.dir === 0 ? "#D4AF64" : "#C17A5E";
+        const glow = h.dir === 0 ? "rgba(212,175,80,0.9)" : "rgba(193,122,94,0.85)";
+        heart(px, py, h.r, alpha, fill, glow);
+      }
+
+      raf = requestAnimationFrame(frame);
+    }
+
+    // Phase 1: Eslam reaches out — same moment orbit starts
+    const t1 = setTimeout(() => { phase = 1; lastTs = 0; raf = requestAnimationFrame(frame); }, 2800);
+    // Phase 2: Selma responds ~2.4 s later (first hearts just arrived)
+    const t2 = setTimeout(() => { phase = 2; }, 5200);
+
+    return () => { clearTimeout(t1); clearTimeout(t2); cancelAnimationFrame(raf); };
+  }, [inView]);
 
   return (
     <section
       className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden"
       style={{ background: "linear-gradient(180deg, #EDE4CC 0%, #F5EDD6 25%, #FAF7F0 60%, #F5EDD6 100%)" }}
     >
+      {/* Heart trail canvas — full-section overlay, pointer-events disabled */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        style={{ zIndex: 25 }}
+        aria-hidden="true"
+      />
+
       {/* Background grid */}
       <div className="absolute inset-0 opacity-[0.025]" aria-hidden="true">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -452,6 +590,7 @@ export function CitiesDrawingScene() {
         >
           {/* Eslam childhood photo — orbits upward after maps finish drawing */}
           <motion.div
+            ref={eslamPhotoRef}
             animate={eslamControls}
             className="mb-5 rounded-full overflow-hidden shrink-0"
             style={{
@@ -535,6 +674,7 @@ export function CitiesDrawingScene() {
         >
           {/* Selma childhood photo — orbits downward, exactly opposite to Eslam */}
           <motion.div
+            ref={selmaPhotoRef}
             animate={selmaControls}
             className="mb-5 rounded-full overflow-hidden shrink-0"
             style={{
