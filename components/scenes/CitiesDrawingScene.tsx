@@ -378,9 +378,9 @@ const STORY_PAIRS = [
   ["فإذا التقت الحكايتان عند آخر المدى،", "وُلد من الوصل عالمٌ جديد."],
 ] as const;
 
-// Each pair: 1700ms reveal → 1000ms hold → 700ms exit (AnimatePresence) = 3400ms cycle
+// Each pair: ~3200ms reveal → 2500ms hold → 700ms exit = 6400ms cycle
 const NARR_START    = 8200;  // ms after inView (after both heart trails connect)
-const NARR_CYCLE    = 3400;  // ms between successive setNarrativeIndex calls
+const NARR_CYCLE    = 6400;  // ms between successive setNarrativeIndex calls
 
 export function CitiesDrawingScene() {
   const ref            = useRef<HTMLDivElement>(null);
@@ -633,9 +633,9 @@ export function CitiesDrawingScene() {
                     initial={{ clipPath: "inset(0 0 0 100%)" }}
                     animate={{ clipPath: "inset(0 0 0 0%)" }}
                     transition={{
-                      duration: isFinal ? 2.4 : 1.5,
-                      delay: li * 0.42,
-                      ease: [0.22, 1, 0.36, 1],
+                      duration: isFinal ? 4.0 : 2.6,
+                      delay: li * 0.85,
+                      ease: [0.16, 1, 0.3, 1],
                     }}
                   >
                     {line}
