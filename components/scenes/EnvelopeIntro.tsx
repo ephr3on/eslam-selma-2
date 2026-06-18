@@ -207,46 +207,66 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
             {localOpen && <GoldParticles count={22} active={localOpen} />}
           </motion.div>
 
-          {/* Ripple rings — start and end at opacity:0 so the loop restart is
-              invisible. scale goes 1→1.05→2 so opacity peaks just after the
-              ring appears at stamp size, then fades as it expands. */}
-          <motion.span
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-            style={{ width: 80, height: 80, border: "1.5px solid rgba(212,185,106,0.9)", zIndex: 19 }}
-            initial={{ opacity: 0, scale: 1 }}
-            animate={stampClicked ? { opacity: 0 } : { scale: [1, 1.05, 2], opacity: [0, 0.9, 0] }}
-            transition={stampClicked ? { duration: 0.15 } : { duration: 2, repeat: Infinity, ease: "easeOut", times: [0, 0.12, 1] }}
+          {/* Ripple rings — pure CSS @keyframes (sonar-ring in globals.css).
+              The browser's compositor loops them natively with no JS frame
+              budget; there is no Framer-Motion repeat restart to flash.
+              Centering wrapper fades to 0 when stamp is tapped. */}
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ zIndex: 19, opacity: stampClicked ? 0 : 1, transition: "opacity 0.3s ease" }}
             aria-hidden="true"
-          />
-          <motion.span
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-            style={{ width: 80, height: 80, border: "1.5px solid rgba(212,185,106,0.6)", zIndex: 19 }}
-            initial={{ opacity: 0, scale: 1 }}
-            animate={stampClicked ? { opacity: 0 } : { scale: [1, 1.05, 2], opacity: [0, 0.6, 0] }}
-            transition={stampClicked ? { duration: 0.15 } : { duration: 2, repeat: Infinity, delay: 1, ease: "easeOut", times: [0, 0.12, 1] }}
+          >
+            <span
+              className="block rounded-full"
+              style={{
+                width: 80, height: 80,
+                border: "1.5px solid rgba(212,185,106,0.9)",
+                animation: "sonar-ring 2s ease-out infinite",
+                animationFillMode: "backwards",
+              }}
+            />
+          </div>
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ zIndex: 19, opacity: stampClicked ? 0 : 1, transition: "opacity 0.3s ease" }}
             aria-hidden="true"
-          />
+          >
+            <span
+              className="block rounded-full"
+              style={{
+                width: 80, height: 80,
+                border: "1.5px solid rgba(212,185,106,0.6)",
+                animation: "sonar-ring 2s ease-out 1s infinite",
+                animationFillMode: "backwards",
+              }}
+            />
+          </div>
 
-          {/* Stamp button — gentle scale pulse, independent of the rings */}
-          <motion.button
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 focus:outline-none cursor-pointer"
+          {/* Outer wrapper owns the continuous pulse so hover/tap on the
+              inner button never interrupts it. */}
+          <motion.div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             style={{ zIndex: 20 }}
             animate={stampClicked ? { scale: 0, opacity: 0 } : { scale: [1, 1.07, 1], opacity: 1 }}
-            whileHover={{ scale: 1.12 }}
-            whileTap={{ scale: 0.9 }}
             transition={stampClicked ? { duration: 0.35 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            onClick={handleStampTap}
-            aria-label="اضغط لفتح الدعوة"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/stamp.png"
-              alt=""
-              aria-hidden="true"
-              className="block"
-              style={{ width: 80, height: 80, objectFit: "contain" }}
-            />
-          </motion.button>
+            <motion.button
+              className="focus:outline-none cursor-pointer block"
+              whileHover={{ scale: 1.1, transition: { duration: 0.2, ease: "easeOut" } }}
+              whileTap={{ scale: 0.9, transition: { duration: 0.1, ease: "easeOut" } }}
+              onClick={handleStampTap}
+              aria-label="اضغط لفتح الدعوة"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/stamp.png"
+                alt=""
+                aria-hidden="true"
+                className="block"
+                style={{ width: 80, height: 80, objectFit: "contain" }}
+              />
+            </motion.button>
+          </motion.div>
 
         </div>
 

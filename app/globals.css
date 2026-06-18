@@ -143,6 +143,14 @@ body {
   animation: gold-shimmer 4s linear infinite;
 }
 
+/* ─── Stamp sonar rings ───────────────────────────────────────────────────
+   scale(0) at start → ring is 0 px wide → invisible even at opacity 0.85.
+   opacity 0 at end → invisible.  Loop restart is seamless either way.     */
+@keyframes sonar-ring {
+  from { transform: scale(0); opacity: 0.85; }
+  to   { transform: scale(2.5); opacity: 0; }
+}
+
 /* ─── Float Animation ─── */
 @keyframes float-up {
   0%   { transform: translateY(0) scale(1); opacity: 0; }
