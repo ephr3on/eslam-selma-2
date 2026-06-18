@@ -734,6 +734,28 @@ export function CitiesDrawingScene() {
             }}
             aria-hidden="true"
           />
+
+          {/* Poem — fades in after the maps settle */}
+          <motion.p
+            className="font-display text-center mt-4"
+            style={{
+              color: "#6B5A47",
+              fontSize: "0.72rem",
+              lineHeight: "2.4",
+              whiteSpace: "nowrap",
+            }}
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 1.4, delay: 3.2, ease: "easeOut" }}
+          >
+            يا جنّة روحي.. يا عين اليقين
+            <br />
+            يا بسمةَ عُمري وعَهدي المُبين
+            <br />
+            سأبني لعينيك ما تشتهين
+            <br />
+            حِصنًا من الحُبِّ لا يستكين
+          </motion.p>
         </div>
 
         {/* Tunisia side (left in RTL — appears on the left) */}
