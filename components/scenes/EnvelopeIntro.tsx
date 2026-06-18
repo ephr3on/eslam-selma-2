@@ -19,6 +19,7 @@ function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full drop-shadow-lg"
+        style={{ overflow: "visible" }}
         aria-hidden="true"
       >
         {/* Envelope back */}
@@ -41,13 +42,13 @@ function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
 
         {/* Envelope flap (top triangle) — animates open */}
         <motion.path
-          d={isOpen ? "M2 2 L160 100 L318 2 Z" : "M2 2 L160 110 L318 2 Z"}
-          fill={isOpen ? "#F8F3E6" : "#EDE3CA"}
-          stroke="#D4B96A"
-          strokeWidth="1"
+          initial={{ d: "M2 2 L160 110 L318 2 Z", fill: "#EDE3CA" }}
           animate={{
             d: isOpen ? "M2 2 L160 -80 L318 2 Z" : "M2 2 L160 110 L318 2 Z",
+            fill: isOpen ? "#F8F3E6" : "#EDE3CA",
           }}
+          stroke="#D4B96A"
+          strokeWidth="1"
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         />
 
@@ -76,10 +77,10 @@ function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
           }}
         >
           <span
-            className="text-[#FAF7F0] text-lg select-none"
+            className="text-[#FAF7F0] text-sm select-none"
             style={{ fontFamily: "serif", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
           >
-            إ
+            إ♥س
           </span>
         </div>
       </motion.div>
@@ -100,7 +101,7 @@ export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
     if (localOpen) return;
     setLocalOpen(true);
     // Let the flap animate (~1s) before transitioning
-    setTimeout(() => onOpen(), 950);
+    setTimeout(() => onOpen(), 1800);
   }
 
   return (
@@ -154,49 +155,49 @@ export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
           </p>
         </motion.div>
 
-        {/* The Envelope */}
-        <motion.button
-          className="relative w-72 h-48 sm:w-80 sm:h-52 md:w-96 md:h-64 cursor-pointer focus:outline-none"
-          onClick={handleClick}
-          whileHover={localOpen ? {} : { scale: 1.02 }}
-          whileTap={localOpen ? {} : { scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          aria-label="افتح الدعوة"
-          style={{
-            filter: "drop-shadow(0 8px 24px rgba(28,18,9,0.12))",
-          }}
-        >
-          <EnvelopeSVG isOpen={localOpen} />
-          {localOpen && <GoldParticles count={22} active={localOpen} />}
-        </motion.button>
+        {/* The Envelope + Hint */}
+        <div className="relative">
+          <motion.button
+            className="relative w-72 h-48 sm:w-80 sm:h-52 md:w-96 md:h-64 cursor-pointer focus:outline-none"
+            onClick={handleClick}
+            whileHover={localOpen ? {} : { scale: 1.02 }}
+            whileTap={localOpen ? {} : { scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            aria-label="افتح الدعوة"
+            style={{
+              filter: "drop-shadow(0 8px 24px rgba(28,18,9,0.12))",
+              willChange: "transform",
+            }}
+          >
+            <EnvelopeSVG isOpen={localOpen} />
+            {localOpen && <GoldParticles count={22} active={localOpen} />}
+          </motion.button>
 
-        {/* Hint text */}
-        <AnimatePresence>
-          {!localOpen && hinted && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.6 }}
-              className="mt-8 flex flex-col items-center gap-2"
-            >
+          {/* Hint — absolutely positioned so it never shifts the envelope */}
+          <AnimatePresence>
+            {!localOpen && hinted && (
               <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-full mt-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.6 }}
               >
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <path d="M10 3 L10 17 M5 12 L10 17 L15 12" stroke="#B8943F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M10 17 L10 3 M5 8 L10 3 L15 8" stroke="#B8943F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </motion.div>
+                <p className="font-body text-sm whitespace-nowrap" style={{ color: "#8C7B6A" }}>
+                  {invitationData.openEnvelopePrompt}
+                </p>
               </motion.div>
-              <p
-                className="font-body text-sm"
-                style={{ color: "#8C7B6A" }}
-              >
-                {invitationData.openEnvelopePrompt}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
 
       {/* Bottom decorative line */}

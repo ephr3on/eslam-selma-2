@@ -15,7 +15,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
     >
       {/* Nile river — the spine of Egypt */}
       <motion.path
-        d="M90 8 Q96 45 88 85 Q80 125 90 165 Q100 205 88 235"
+        d="M91 30 Q96 57 88 85 Q80 125 90 165 Q100 205 88 235"
         stroke="#4A6E9E"
         strokeWidth="2.5"
         fill="none"
@@ -27,7 +27,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
 
       {/* Nile delta — fan shape */}
       <motion.path
-        d="M88 30 Q78 18 58 10 M88 30 Q82 14 76 5 M88 30 Q96 12 108 5 M88 30 Q98 16 116 10"
+        d="M91 30 Q81 18 61 10 M91 30 Q85 14 79 5 M91 30 Q99 12 111 5 M91 30 Q101 16 119 10"
         stroke="#4A6E9E"
         strokeWidth="1"
         fill="none"
@@ -39,7 +39,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
 
       {/* Nile tributaries */}
       <motion.path
-        d="M88 85 Q72 80 52 84 M88 100 Q70 95 50 100 M88 115 Q74 110 58 118"
+        d="M91 32 Q75 27 55 31 M90 40 Q72 35 52 39 M89 48 Q73 43 57 51"
         stroke="#4A6E9E"
         strokeWidth="0.8"
         fill="none"
@@ -71,7 +71,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
 
       {/* Pyramid trio */}
       <motion.path
-        d="M16 200 L34 168 L52 200 Z"
+        d="M10 80 L24 53 L38 80 Z"
         stroke="#B8943F"
         strokeWidth="1.2"
         fill="rgba(184,148,63,0.05)"
@@ -80,7 +80,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
         transition={{ duration: 1.2, delay: 1.2 }}
       />
       <motion.path
-        d="M42 200 L56 173 L70 200 Z"
+        d="M35 80 L47 57 L59 80 Z"
         stroke="#B8943F"
         strokeWidth="1.2"
         fill="rgba(184,148,63,0.05)"
@@ -89,7 +89,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
         transition={{ duration: 1.2, delay: 1.4 }}
       />
       <motion.path
-        d="M62 200 L74 178 L86 200 Z"
+        d="M55 80 L65 63 L75 80 Z"
         stroke="#C9A84C"
         strokeWidth="0.8"
         fill="none"
@@ -139,7 +139,7 @@ function EgyptMap({ inView }: { inView: boolean }) {
 
       {/* Islamic star ornament */}
       <motion.path
-        d="M148 130 L152 142 L164 142 L155 150 L158 162 L148 155 L138 162 L141 150 L132 142 L144 142 Z"
+        d="M148 105 L152 117 L164 117 L155 125 L158 137 L148 130 L138 137 L141 125 L132 117 L144 117 Z"
         stroke="#D4B96A"
         strokeWidth="0.7"
         fill="none"
@@ -150,15 +150,15 @@ function EgyptMap({ inView }: { inView: boolean }) {
 
       {/* Path toward center — dashed gold line going left */}
       <motion.path
-        d="M0 155 Q30 150 60 153 Q76 155 90 155"
+        d="M0 88 Q30 83 60 86 Q70 88 80 88"
         stroke="#B8943F"
         strokeWidth="1.5"
         fill="none"
         strokeLinecap="round"
         strokeDasharray="5 4"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 0.55 } : {}}
-        transition={{ duration: 2.2, delay: 2, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 0.55 } : {}}
+        transition={{ duration: 1.2, delay: 2, ease: "easeIn" }}
       />
     </svg>
   );
@@ -175,7 +175,7 @@ function TunisiaMap({ inView }: { inView: boolean }) {
     >
       {/* Coastal outline */}
       <motion.path
-        d="M20 30 Q50 18 90 22 Q130 26 155 40 Q168 52 165 70 Q162 90 155 110 Q145 135 140 165 Q135 200 145 230"
+        d="M28 22 Q58 10 98 14 Q138 18 163 32 Q176 44 173 62 Q170 82 163 102 Q165 125 170 158 Q165 192 172 225"
         stroke="#C17A5E"
         strokeWidth="1.8"
         fill="none"
@@ -201,48 +201,88 @@ function TunisiaMap({ inView }: { inView: boolean }) {
         />
       ))}
 
-      {/* Medina gateway — refined arch */}
-      {/* <motion.path
-        d="M58 220 L58 175 Q58 155 72 155 Q86 155 86 175 L86 220"
+      {/* قصور الساف — ribat façade */}
+      <motion.rect
+        x="105" y="173" width="42" height="50"
         stroke="#8C7B6A"
-        strokeWidth="1.4"
+        strokeWidth="1.2"
+        fill="rgba(140,123,106,0.07)"
+        rx="1"
+        initial={{ scaleY: 0, opacity: 0 }}
+        animate={inView ? { scaleY: 1, opacity: 1 } : {}}
+        style={{ transformOrigin: "126px 223px" }}
+        transition={{ duration: 1.0, delay: 0.9 }}
+      />
+      {/* Crenellated parapet — 5 merlons */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <motion.rect
+          key={`merlon-${i}`}
+          x={108 + i * 8} y="164" width="5" height="10"
+          stroke="#8C7B6A"
+          strokeWidth="0.8"
+          fill="rgba(140,123,106,0.09)"
+          rx="0.5"
+          initial={{ scaleY: 0, opacity: 0 }}
+          animate={inView ? { scaleY: 1, opacity: 1 } : {}}
+          style={{ transformOrigin: `${110.5 + i * 8}px 174px` }}
+          transition={{ duration: 0.4, delay: 1.15 + i * 0.06 }}
+        />
+      ))}
+      {/* Horseshoe arch doorway */}
+      <motion.path
+        d="M118 223 L118 212 Q118 198 126 198 Q134 198 134 212 L134 223"
+        stroke="#8C7B6A"
+        strokeWidth="1.2"
+        fill="rgba(74,124,110,0.05)"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={inView ? { pathLength: 1, opacity: 0.45 } : {}}
+        transition={{ duration: 1.0, delay: 1.4 }}
+      />
+      {/* Left arched window */}
+      <motion.path
+        d="M110 190 L110 184 Q110 178 114 178 Q118 178 118 184 L118 190"
+        stroke="#8C7B6A"
+        strokeWidth="0.9"
         fill="none"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 0.32 } : {}}
-        transition={{ duration: 1.5, delay: 0.9 }}
-      /> */}
-      {/* <motion.path
-        d="M58 175 Q72 160 86 175"
+        animate={inView ? { pathLength: 1, opacity: 0.38 } : {}}
+        transition={{ duration: 0.6, delay: 1.6 }}
+      />
+      {/* Right arched window */}
+      <motion.path
+        d="M134 190 L134 184 Q134 178 138 178 Q142 178 142 184 L142 190"
         stroke="#8C7B6A"
-        strokeWidth="1.4"
-        fill="rgba(140,123,106,0.04)"
+        strokeWidth="0.9"
+        fill="none"
         initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 0.35 } : {}}
-        transition={{ duration: 0.8, delay: 1.5 }}
-      /> */}
-      {/* Arch keystone dot */}
-      <motion.circle
-        cx="72" cy="160" r="2.5"
-        fill="#B8943F"
-        opacity="0.35"
-        initial={{ scale: 0 }}
-        animate={inView ? { scale: 1 } : {}}
-        transition={{ delay: 1.8, duration: 0.4 }}
+        animate={inView ? { pathLength: 1, opacity: 0.38 } : {}}
+        transition={{ duration: 0.6, delay: 1.7 }}
+      />
+      {/* Crescent finial on parapet */}
+      <motion.path
+        d="M124 162 Q126 156 128 162 Q126.5 159.5 124 162 Z"
+        stroke="#B8943F"
+        strokeWidth="0.9"
+        fill="rgba(184,148,63,0.2)"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={inView ? { scale: 1, opacity: 1 } : {}}
+        style={{ transformOrigin: "126px 160px" }}
+        transition={{ delay: 1.85, duration: 0.4 }}
       />
 
       {/* Minaret */}
       <motion.rect
-        x="118" y="90" width="12" height="70"
+        x="118" y="85" width="12" height="70"
         fill="#8C7B6A"
         opacity="0.12"
         rx="1"
         initial={{ scaleY: 0 }}
         animate={inView ? { scaleY: 1 } : {}}
-        style={{ transformOrigin: "124px 160px" }}
+        style={{ transformOrigin: "124px 155px" }}
         transition={{ delay: 1.0, duration: 0.9 }}
       />
       <motion.path
-        d="M112 91 Q124 78 136 91 Z"
+        d="M112 86 Q124 73 136 86 Z"
         fill="#8C7B6A"
         opacity="0.2"
         initial={{ scale: 0 }}
@@ -250,7 +290,7 @@ function TunisiaMap({ inView }: { inView: boolean }) {
         transition={{ delay: 1.5, duration: 0.5 }}
       />
       <motion.circle
-        cx="124" cy="91" r="3"
+        cx="124" cy="86" r="3"
         fill="#B8943F"
         opacity="0.25"
         initial={{ scale: 0 }}
@@ -306,7 +346,7 @@ function TunisiaMap({ inView }: { inView: boolean }) {
 
       {/* Hafsia star pattern */}
       <motion.path
-        d="M22 130 L25 140 L35 140 L27 147 L30 157 L22 151 L14 157 L17 147 L9 140 L19 140 Z"
+        d="M22 120 L25 130 L35 130 L27 137 L30 147 L22 141 L14 147 L17 137 L9 130 L19 130 Z"
         stroke="#D4B96A"
         strokeWidth="0.7"
         fill="none"
@@ -323,9 +363,9 @@ function TunisiaMap({ inView }: { inView: boolean }) {
         fill="none"
         strokeLinecap="round"
         strokeDasharray="5 4"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 0.55 } : {}}
-        transition={{ duration: 2.2, delay: 2, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 0.55 } : {}}
+        transition={{ duration: 1.2, delay: 2, ease: "easeIn" }}
       />
     </svg>
   );
@@ -338,7 +378,7 @@ export function CitiesDrawingScene() {
   return (
     <section
       className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #EDE4CC 0%, #F5EDD6 25%, #FAF7F0 60%, #F0E8D5 100%)" }}
+      style={{ background: "linear-gradient(180deg, #EDE4CC 0%, #F5EDD6 25%, #FAF7F0 60%, #F5EDD6 100%)" }}
     >
       {/* Background grid */}
       <div className="absolute inset-0 opacity-[0.025]" aria-hidden="true">

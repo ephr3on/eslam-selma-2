@@ -3,52 +3,56 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { invitationData } from "@/data/invitation";
-import { buildGoogleCalendarUrl } from "@/lib/utils";
+import { buildGoogleCalendarUrl, generateICS } from "@/lib/utils";
 import { IslamicGeometryLine } from "@/components/ui/OrnamentalDivider";
 import { StaggeredLines } from "@/components/ui/AnimatedArabicText";
 
+const buttonStyle = {
+  primary: {
+    background: "linear-gradient(135deg, #B8943F, #D4B96A, #B8943F)",
+    backgroundSize: "200% auto",
+    color: "#FAF7F0",
+    border: "none",
+    boxShadow: "0 4px 16px rgba(184,148,63,0.3)",
+  },
+  secondary: {
+    background: "transparent",
+    color: "#B8943F",
+    border: "1px solid #D4B96A",
+  },
+} as const;
+
 function CardButton({
   href,
+  onClick,
   children,
   variant = "primary",
   ariaLabel,
 }: {
-  href: string;
+  href?: string;
+  onClick?: () => void;
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   ariaLabel: string;
 }) {
+  const shared = {
+    "aria-label": ariaLabel,
+    className: "inline-flex items-center justify-center gap-2 font-body text-sm px-6 py-3 rounded-sm transition-all duration-300 select-none",
+    style: buttonStyle[variant],
+    whileHover: {
+      scale: 1.02,
+      boxShadow: variant === "primary"
+        ? "0 6px 24px rgba(184,148,63,0.4)"
+        : "0 2px 12px rgba(184,148,63,0.2)",
+    },
+    whileTap: { scale: 0.97 },
+  };
+
+  if (onClick) {
+    return <motion.button onClick={onClick} {...shared}>{children}</motion.button>;
+  }
   return (
-    <motion.a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={ariaLabel}
-      className="inline-flex items-center justify-center gap-2 font-body text-sm px-6 py-3 rounded-sm transition-all duration-300 select-none"
-      style={
-        variant === "primary"
-          ? {
-              background: "linear-gradient(135deg, #B8943F, #D4B96A, #B8943F)",
-              backgroundSize: "200% auto",
-              color: "#FAF7F0",
-              border: "none",
-              boxShadow: "0 4px 16px rgba(184,148,63,0.3)",
-            }
-          : {
-              background: "transparent",
-              color: "#B8943F",
-              border: "1px solid #D4B96A",
-            }
-      }
-      whileHover={{
-        scale: 1.02,
-        boxShadow:
-          variant === "primary"
-            ? "0 6px 24px rgba(184,148,63,0.4)"
-            : "0 2px 12px rgba(184,148,63,0.2)",
-      }}
-      whileTap={{ scale: 0.97 }}
-    >
+    <motion.a href={href} target="_blank" rel="noopener noreferrer" {...shared}>
       {children}
     </motion.a>
   );
@@ -57,7 +61,25 @@ function CardButton({
 function CardInner() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-5% 0px" });
-  const calUrl = buildGoogleCalendarUrl(invitationData.calendarEvent);
+
+  function handleCalendarClick() {
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    if (isIOS) {
+      const ics = generateICS(invitationData.calendarEvent);
+      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "eslam-selma-wedding.ics";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else {
+      window.open(buildGoogleCalendarUrl(invitationData.calendarEvent), "_blank", "noopener,noreferrer");
+    }
+  }
 
   return (
     <motion.div
@@ -259,7 +281,7 @@ function CardInner() {
               </CardButton>
 
               <CardButton
-                href={calUrl}
+                onClick={handleCalendarClick}
                 ariaLabel="أضف حفل الزفاف إلى التقويم"
                 variant="secondary"
               >
