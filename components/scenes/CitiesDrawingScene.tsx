@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useInView, useAnimation } from "framer-motion";
-import { useRef, useEffect } from "react";
-import { AnimatedArabicText } from "@/components/ui/AnimatedArabicText";
+import { motion, AnimatePresence, useInView, useAnimation } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
 function EgyptMap({ inView }: { inView: boolean }) {
   return (
@@ -371,11 +370,24 @@ function TunisiaMap({ inView }: { inView: boolean }) {
   );
 }
 
+const STORY_PAIRS = [
+  ["يُروى أن للمدن أرواحًا خفية،",       "تتعارف قبل أن تتعارف الطرق."],
+  ["وأن الأفق إذا أحب أفقًا بعيدًا،",   "بعث إليه من الضوء رسولًا."],
+  ["فتمضي الأعوام ولا ينطفئ النداء،",   "وتبقى النجوم شاهدة على المسير."],
+  ["حتى تتقارب الجهات رويدًا رويدًا،",  "كأن الأرض تطوي المسافات بيديها."],
+  ["فإذا التقت الحكايتان عند آخر المدى،", "وُلد من الوصل عالمٌ جديد."],
+] as const;
+
+// Each pair: 1700ms reveal → 1000ms hold → 700ms exit (AnimatePresence) = 3400ms cycle
+const NARR_START    = 8200;  // ms after inView (after both heart trails connect)
+const NARR_CYCLE    = 3400;  // ms between successive setNarrativeIndex calls
+
 export function CitiesDrawingScene() {
   const ref            = useRef<HTMLDivElement>(null);
   const inView         = useInView(ref, { once: true, margin: "-5% 0px" });
   const eslamControls  = useAnimation();
   const selmaControls  = useAnimation();
+  const [narrativeIndex, setNarrativeIndex] = useState(-1);
   // Refs for live position tracking
   const eslamPhotoRef  = useRef<HTMLDivElement>(null);
   const selmaPhotoRef  = useRef<HTMLDivElement>(null);
@@ -534,7 +546,17 @@ export function CitiesDrawingScene() {
     // Phase 2: Selma responds ~2.4 s later (first hearts just arrived)
     const t2 = setTimeout(() => { phase = 2; }, 5200);
 
-    return () => { clearTimeout(t1); clearTimeout(t2); cancelAnimationFrame(raf); };
+    // Narrative: starts after both trails have connected (~7.7 s), with a breath of space
+    const narrativeTimers = STORY_PAIRS.map((_, i) =>
+      setTimeout(() => setNarrativeIndex(i), NARR_START + i * NARR_CYCLE)
+    );
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      cancelAnimationFrame(raf);
+      narrativeTimers.forEach(clearTimeout);
+    };
   }, [inView]);
 
   return (
@@ -562,19 +584,68 @@ export function CitiesDrawingScene() {
         </svg>
       </div>
 
-      {/* Heading */}
-      <AnimatedArabicText
-        className="text-center mb-12 z-10"
-        delay={0}
-        variant="rise"
+      {/* Narrative text — replaces static heading */}
+      <div
+        className="relative z-10 mb-10 w-full flex items-center justify-center"
+        style={{ minHeight: "5.5rem" }}
+        aria-live="polite"
+        aria-atomic="true"
       >
-        <p className="font-display text-xl md:text-2xl mb-2" style={{ color: "#3D2E1E" }}>
-          مدينتان تتحققان في وجود بعضهما
-        </p>
-        <p>
-          رُسم الطريق بالحب والوفاء
-        </p>
-      </AnimatedArabicText>
+        <AnimatePresence mode="wait">
+          {narrativeIndex === -1 ? (
+            /* Pre-narrative: static heading shown until story begins */
+            <motion.div
+              key="pre"
+              className="flex flex-col items-center text-center gap-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              <p className="font-display text-xl md:text-2xl" style={{ color: "#3D2E1E" }}>
+                مدينتان تتحققان في وجود بعضهما
+              </p>
+              <p className="font-display text-base" style={{ color: "#8C7B6A" }}>
+                رُسم الطريق بالحب والوفاء
+              </p>
+            </motion.div>
+          ) : (
+            /* Narrative pairs 0–4 */
+            <motion.div
+              key={narrativeIndex}
+              className="flex flex-col items-center text-center gap-0.5 px-6"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={narrativeIndex < 4 ? { opacity: 0, transition: { duration: 0.65, ease: "easeInOut" } } : undefined}
+            >
+              {STORY_PAIRS[narrativeIndex].map((line, li) => {
+                const isFinal = narrativeIndex === 4;
+                return (
+                  <motion.p
+                    key={li}
+                    className="font-display overflow-hidden"
+                    style={{
+                      color: isFinal ? "#1C1209" : "#3D2E1E",
+                      fontSize: isFinal ? "1.08rem" : "0.95rem",
+                      lineHeight: "2.3",
+                      letterSpacing: isFinal ? "0.01em" : undefined,
+                    }}
+                    initial={{ clipPath: "inset(0 0 0 100%)" }}
+                    animate={{ clipPath: "inset(0 0 0 0%)" }}
+                    transition={{
+                      duration: isFinal ? 2.4 : 1.5,
+                      delay: li * 0.42,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    {line}
+                  </motion.p>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Cities row */}
       <div
@@ -701,18 +772,6 @@ export function CitiesDrawingScene() {
         </motion.div>
       </div>
 
-      {/* Poetic closing */}
-      <AnimatedArabicText
-        className="mt-14 text-center z-10 max-w-xs px-4"
-        delay={0.3}
-        variant="ink"
-      >
-        <p className="font-display text-base" style={{ color: "#6B5A47", lineHeight: "2.2" }}>
-          من الشرقية إلى سوسة،
-          <br />
-          ومن ضفتي الحلم إلى بيتٍ الحقيقة
-        </p>
-      </AnimatedArabicText>
     </section>
   );
 }
