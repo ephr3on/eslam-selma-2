@@ -402,7 +402,7 @@ export function CitiesDrawingScene() {
           مدينتان تتحققان في وجود بعضهما
         </p>
         <p className="font-body text-xs" style={{ color: "#8C7B6A", letterSpacing: "0.05em" }}>
-          رُسم الطريق بالحبر والضوء
+          رُسم الطريق بالحب والوفاء
         </p>
       </AnimatedArabicText>
 
