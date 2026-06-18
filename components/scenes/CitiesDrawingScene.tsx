@@ -401,7 +401,7 @@ export function CitiesDrawingScene() {
         <p className="font-display text-xl md:text-2xl mb-2" style={{ color: "#3D2E1E" }}>
           مدينتان تتحققان في وجود بعضهما
         </p>
-        <p className="font-body text-xs" style={{ color: "#8C7B6A", letterSpacing: "0.05em" }}>
+        <p>
           رُسم الطريق بالحب والوفاء
         </p>
       </AnimatedArabicText>
@@ -418,6 +418,22 @@ export function CitiesDrawingScene() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* Eslam childhood photo */}
+          <div
+            className="mb-5 rounded-full overflow-hidden shrink-0"
+            style={{
+              width: 96, height: 96,
+              border: "2px solid rgba(212,185,106,0.7)",
+              boxShadow: "0 4px 16px rgba(28,18,9,0.14)",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/eslam.jpg"
+              alt="إسلام"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <EgyptMap inView={inView} />
           <div className="mt-4 text-center">
             <p className="font-names text-2xl" style={{ color: "#B8943F" }}>إسلام</p>
@@ -484,6 +500,22 @@ export function CitiesDrawingScene() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* Selma childhood photo */}
+          <div
+            className="mb-5 rounded-full overflow-hidden shrink-0"
+            style={{
+              width: 96, height: 96,
+              border: "2px solid rgba(212,185,106,0.7)",
+              boxShadow: "0 4px 16px rgba(28,18,9,0.14)",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/selma.jpg"
+              alt="سلمى"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <TunisiaMap inView={inView} />
           <div className="mt-4 text-center">
             <p className="font-names text-2xl" style={{ color: "#B8943F" }}>سلمى</p>
