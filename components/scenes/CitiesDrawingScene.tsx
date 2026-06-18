@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, useAnimation } from "framer-motion";
+import { useRef, useEffect } from "react";
 import { AnimatedArabicText } from "@/components/ui/AnimatedArabicText";
 
 function EgyptMap({ inView }: { inView: boolean }) {
@@ -374,6 +374,38 @@ function TunisiaMap({ inView }: { inView: boolean }) {
 export function CitiesDrawingScene() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-5% 0px" });
+  const eslamControls = useAnimation();
+  const selmaControls = useAnimation();
+
+  useEffect(() => {
+    if (!inView) return;
+    // Wait for the maps to finish drawing (~2.5 s), then start the orbit
+    const timer = setTimeout(() => {
+      const shared = {
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut" as const,
+        times: [0, 0.25, 0.5, 0.75, 1],
+      };
+      // Eslam arcs UPWARD — clockwise relative to centre
+      eslamControls.start({
+        x: [0, 10, 0, -10, 0],
+        y: [0, -14, -22, -14, 0],
+        scale: [1, 1.06, 1.10, 1.06, 1],
+        rotate: [0, 4, 0, -4, 0],
+        transition: shared,
+      });
+      // Selma arcs DOWNWARD — counter-clockwise, exactly opposite
+      selmaControls.start({
+        x: [0, -10, 0, 10, 0],
+        y: [0, 14, 22, 14, 0],
+        scale: [1, 1.06, 1.10, 1.06, 1],
+        rotate: [0, -4, 0, 4, 0],
+        transition: shared,
+      });
+    }, 2800);
+    return () => clearTimeout(timer);
+  }, [inView, eslamControls, selmaControls]);
 
   return (
     <section
@@ -418,8 +450,9 @@ export function CitiesDrawingScene() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Eslam childhood photo */}
-          <div
+          {/* Eslam childhood photo — orbits upward after maps finish drawing */}
+          <motion.div
+            animate={eslamControls}
             className="mb-5 rounded-full overflow-hidden shrink-0"
             style={{
               width: 96, height: 96,
@@ -433,7 +466,7 @@ export function CitiesDrawingScene() {
               alt="إسلام"
               className="w-full h-full object-cover"
             />
-          </div>
+          </motion.div>
           <EgyptMap inView={inView} />
           <div className="mt-4 text-center">
             <p className="font-names text-2xl" style={{ color: "#B8943F" }}>إسلام</p>
@@ -500,8 +533,9 @@ export function CitiesDrawingScene() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Selma childhood photo */}
-          <div
+          {/* Selma childhood photo — orbits downward, exactly opposite to Eslam */}
+          <motion.div
+            animate={selmaControls}
             className="mb-5 rounded-full overflow-hidden shrink-0"
             style={{
               width: 96, height: 96,
@@ -515,7 +549,7 @@ export function CitiesDrawingScene() {
               alt="سلمى"
               className="w-full h-full object-cover"
             />
-          </div>
+          </motion.div>
           <TunisiaMap inView={inView} />
           <div className="mt-4 text-center">
             <p className="font-names text-2xl" style={{ color: "#B8943F" }}>سلمى</p>
