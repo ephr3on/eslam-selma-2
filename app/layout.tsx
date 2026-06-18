@@ -19,6 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
+      <head>
+        <link rel="preload" as="image" href="/wedding-photo.jpg" />
+      </head>
       <body className="min-h-screen overflow-x-hidden">
         {children}
       </body>
