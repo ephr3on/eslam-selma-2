@@ -584,67 +584,20 @@ export function CitiesDrawingScene() {
         </svg>
       </div>
 
-      {/* Narrative text — fixed height prevents layout shift when pairs swap */}
-      <div
-        className="relative z-10 mb-10 w-full"
-        style={{ height: "8rem" }}
-        aria-live="polite"
-        aria-atomic="true"
+      {/* Permanent title — always visible, never replaced */}
+      <motion.div
+        className="text-center z-10 mb-10"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 1.2, ease: "easeOut" }}
       >
-        <AnimatePresence mode="wait">
-          {narrativeIndex === -1 ? (
-            /* Pre-narrative: static heading shown until story begins */
-            <motion.div
-              key="pre"
-              className="absolute inset-0 flex flex-col items-center justify-center text-center gap-1"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <p className="font-display text-xl md:text-2xl" style={{ color: "#3D2E1E" }}>
-                مدينتان تتحققان في وجود بعضهما
-              </p>
-              <p className="font-display text-base" style={{ color: "#8C7B6A" }}>
-                رُسم الطريق بالحب والوفاء
-              </p>
-            </motion.div>
-          ) : (
-            /* Narrative pairs 0–4 */
-            <motion.div
-              key={narrativeIndex}
-              className="absolute inset-0 flex flex-col items-center justify-center text-center gap-0.5 px-6"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              exit={narrativeIndex < 4 ? { opacity: 0, transition: { duration: 0.65, ease: "easeInOut" } } : undefined}
-            >
-              {STORY_PAIRS[narrativeIndex].map((line, li) => {
-                const isFinal = narrativeIndex === 4;
-                return (
-                  <motion.p
-                    key={li}
-                    className="font-display text-xl md:text-2xl overflow-hidden"
-                    style={{
-                      color: isFinal ? "#1C1209" : "#3D2E1E",
-                      lineHeight: "2.3",
-                      letterSpacing: isFinal ? "0.01em" : undefined,
-                    }}
-                    initial={{ clipPath: "inset(0 0 0 100%)" }}
-                    animate={{ clipPath: "inset(0 0 0 0%)" }}
-                    transition={{
-                      duration: isFinal ? 4.0 : 2.6,
-                      delay: li * 0.85,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    {line}
-                  </motion.p>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        <p className="font-display text-xl md:text-2xl" style={{ color: "#3D2E1E" }}>
+          من الشرقية إلى سوسة
+        </p>
+        <p className="font-display text-xl md:text-2xl" style={{ color: "#3D2E1E" }}>
+          ومن ضفتي الحلم إلى جمال الواقع
+        </p>
+      </motion.div>
 
       {/* Cities row */}
       <div
@@ -772,22 +725,49 @@ export function CitiesDrawingScene() {
         </motion.div>
       </div>
 
-      {/* Poem — centered below the two names */}
-      <motion.p
-        className="font-display text-center z-10 mt-6"
-        style={{
-          color: "#3D2E1E",
-          fontSize: "0.95rem",
-          lineHeight: "2.3",
-        }}
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 1.4, delay: 3.2, ease: "easeOut" }}
+      {/* Story reveal — fixed height below the names, same timing as before */}
+      <div
+        className="relative z-10 mt-8 w-full"
+        style={{ height: "8rem" }}
+        aria-live="polite"
+        aria-atomic="true"
       >
-        من الشرقية إلى سوسة
-        <br />
-        ومن ضفتي الحلم إلى جمال الواقع
-      </motion.p>
+        <AnimatePresence mode="wait">
+          {narrativeIndex >= 0 && (
+            <motion.div
+              key={narrativeIndex}
+              className="absolute inset-0 flex flex-col items-center justify-center text-center gap-0.5 px-6"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={narrativeIndex < 4 ? { opacity: 0, transition: { duration: 0.65, ease: "easeInOut" } } : undefined}
+            >
+              {STORY_PAIRS[narrativeIndex].map((line, li) => {
+                const isFinal = narrativeIndex === 4;
+                return (
+                  <motion.p
+                    key={li}
+                    className="font-display text-xl md:text-2xl overflow-hidden"
+                    style={{
+                      color: isFinal ? "#1C1209" : "#3D2E1E",
+                      lineHeight: "2.3",
+                      letterSpacing: isFinal ? "0.01em" : undefined,
+                    }}
+                    initial={{ clipPath: "inset(0 0 0 100%)" }}
+                    animate={{ clipPath: "inset(0 0 0 0%)" }}
+                    transition={{
+                      duration: isFinal ? 4.0 : 2.6,
+                      delay: li * 0.85,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    {line}
+                  </motion.p>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
     </section>
   );
