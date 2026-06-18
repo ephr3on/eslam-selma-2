@@ -594,6 +594,7 @@ export function CitiesDrawingScene() {
         <p className="font-display text-xl md:text-2xl" style={{ color: "#3D2E1E" }}>
           من الشرقية إلى سوسة
         </p>
+        <br/>
         <p className="font-display text-xl md:text-2xl" style={{ color: "#3D2E1E" }}>
           ومن ضفتي الحلم إلى جمال الواقع
         </p>
