@@ -21,6 +21,8 @@ export default function RootLayout({
     <html lang="ar" dir="rtl">
       <head>
         <link rel="preload" as="image" href="/wedding-photo.jpg" />
+        <link rel="preload" as="image" href="/eslam.jpg" />
+        <link rel="preload" as="image" href="/selma.jpg" />
       </head>
       <body className="min-h-screen overflow-x-hidden">
         {children}
