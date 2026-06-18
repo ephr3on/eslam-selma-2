@@ -1,6 +1,6 @@
 export const invitationData = {
   names: {
-    ar: "إسلام وسلمى",
+    ar: "إسلام و سلمى",
     groom: "إسلام",
     bride: "سلمى",
     monogram: "إ & س",
