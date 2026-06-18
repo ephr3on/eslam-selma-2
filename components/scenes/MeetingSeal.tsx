@@ -232,7 +232,7 @@ export function MeetingSeal() {
 
       {/* Scroll-down hint — prominent, clickable, scrolls to invitation */}
       <motion.button
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 cursor-pointer focus:outline-none group"
+        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 cursor-pointer focus:outline-none group"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 1.2, delay: 3 }}
