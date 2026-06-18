@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 import { GoldParticles } from "@/components/ui/GoldParticles";
 import { FloatingOrnament } from "@/components/ui/FloatingOrnament";
 import { invitationData } from "@/data/invitation";
@@ -119,6 +120,7 @@ export function MeetingSeal() {
 
   return (
     <section
+      id="meeting-seal"
       ref={containerRef}
       className="relative min-h-screen flex flex-col items-center justify-center py-20 overflow-hidden"
       style={{ background: "linear-gradient(180deg, #F5EDD6 0%, #FAF7F0 50%, #F5EDD6 100%)" }}
@@ -227,6 +229,58 @@ export function MeetingSeal() {
         كُتبت الحكاية بهدوء… حتى صار اللقاء قدرًا جميلًا
         </p>
       </motion.div>
+
+      {/* Scroll-down hint — prominent, clickable, scrolls to invitation */}
+      <motion.button
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 cursor-pointer focus:outline-none group"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 1.2, delay: 3 }}
+        onClick={() => smoothScrollTo("invitation-card", 2000)}
+        aria-label="انتقل إلى بطاقة الدعوة"
+      >
+        {/* Label */}
+        <span
+          style={{ color: "#6B5A47" }}
+        >
+          اكتشف الدعوة
+        </span>
+
+        {/* Ornamental arrow: diamond + double chevron, bouncing */}
+        <motion.div
+          animate={{ y: [0, 9, 0] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <svg width="52" height="48" viewBox="0 0 52 48" fill="none" aria-hidden="true">
+            {/* glowing diamond at top */}
+            <motion.path
+              d="M26 2 L32 10 L26 18 L20 10 Z"
+              stroke="#D4B96A"
+              strokeWidth="1.2"
+              fill="rgba(212,185,106,0.22)"
+              animate={{ opacity: [0.55, 1, 0.55] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* upper chevron */}
+            <path
+              d="M8 22 L26 37 L44 22"
+              stroke="#B8943F"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* lower chevron — smaller, softer */}
+            <path
+              d="M16 31 L26 42 L36 31"
+              stroke="#D4B96A"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.6"
+            />
+          </svg>
+        </motion.div>
+      </motion.button>
 
       {/* Floating ornaments at corners */}
       <FloatingOrnament

@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence, useInView, useAnimation } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 function EgyptMap({ inView }: { inView: boolean }) {
   return (
@@ -551,11 +552,20 @@ export function CitiesDrawingScene() {
       setTimeout(() => setNarrativeIndex(i), NARR_START + i * NARR_CYCLE)
     );
 
+    // Auto-scroll to MeetingSeal 2 s after the final pair finishes revealing.
+    // Final pair mounts ~700 ms after its index is set (prev pair exits), then
+    // line 2 finishes at +850 ms stagger +4000 ms reveal = +4850 ms.
+    // Total from index set: 700 + 4850 = 5550 ms. Add 2000 ms buffer.
+    const scrollTimer = setTimeout(() => {
+      smoothScrollTo("meeting-seal", 2600);
+    }, NARR_START + 4 * NARR_CYCLE + 7600);
+
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       cancelAnimationFrame(raf);
       narrativeTimers.forEach(clearTimeout);
+      clearTimeout(scrollTimer);
     };
   }, [inView]);
 

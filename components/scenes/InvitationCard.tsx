@@ -295,6 +295,7 @@ function CardInner() {
 export function InvitationCard() {
   return (
     <section
+      id="invitation-card"
       className="relative flex flex-col items-center justify-center pt-12 pb-8 sm:min-h-screen sm:py-20 px-4 overflow-hidden"
       style={{ background: "linear-gradient(180deg, #F5EDD6 0%, #EDE4D0 30%, #F5EDD6 100%)" }}
     >
