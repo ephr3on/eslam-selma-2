@@ -1,0 +1,11 @@
+{
+  "name": "إسلام و سلمى — دعوة الزفاف",
+  "short_name": "إسلام و سلمى",
+  "icons": [
+    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#D4B96A",
+  "background_color": "#FAF7F0",
+  "display": "standalone"
+}

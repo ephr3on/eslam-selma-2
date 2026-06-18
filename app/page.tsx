@@ -11,6 +11,7 @@ import { InvitationCard } from "@/components/scenes/InvitationCard";
 
 export default function WeddingInvitation() {
   const [isOpened, setIsOpened] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Lock scroll while envelope is showing
   useEffect(() => {
@@ -20,6 +21,35 @@ export default function WeddingInvitation() {
 
   return (
     <main dir="rtl">
+      {/* Golden glow — fixed so it survives the scene switch */}
+      {isTransitioning && (
+        <motion.div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            zIndex: 60,
+            background: [
+              "radial-gradient(ellipse 160% 140% at 50% 44%,",
+              "  rgba(255,255,240,1)         0%,",
+              "  rgba(255,251,220,0.95)      10%,",
+              "  rgba(248,238,190,0.85)      22%,",
+              "  rgba(236,217,154,0.65)      38%,",
+              "  rgba(220,195,110,0.30)      55%,",
+              "  rgba(212,185,106,0.08)      72%,",
+              "  rgba(212,185,106,0)         84%",
+              ")",
+            ].join(""),
+          }}
+          initial={{ opacity: 0 }}
+          animate={isOpened ? { opacity: 0 } : { opacity: 1 }}
+          transition={
+            isOpened
+              ? { duration: 1.8, ease: "easeOut" }
+              : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }
+          }
+          aria-hidden="true"
+        />
+      )}
+
       {/* Scene 1 — Envelope (fixed overlay until tapped) */}
       <AnimatePresence>
         {!isOpened && (
@@ -29,9 +59,13 @@ export default function WeddingInvitation() {
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.2 }}
           >
-            <EnvelopeIntro onOpen={() => setIsOpened(true)} isOpened={false} />
+            <EnvelopeIntro
+              onOpenStart={() => setIsTransitioning(true)}
+              onOpen={() => setIsOpened(true)}
+              isOpened={false}
+            />
           </motion.div>
         )}
       </AnimatePresence>

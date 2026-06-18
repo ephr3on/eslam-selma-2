@@ -7,12 +7,31 @@ import { invitationData } from "@/data/invitation";
 
 interface EnvelopeIntroProps {
   onOpen: () => void;
+  onOpenStart: () => void;
   isOpened: boolean;
 }
 
 function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
   return (
     <div className="relative w-full h-full">
+      {/* Inner light that spills out as the flap opens */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="absolute inset-x-[8%] pointer-events-none"
+            style={{
+              top: "8%",
+              height: "55%",
+              background: "radial-gradient(ellipse at 50% 0%, #FFFBE8 0%, #ECD99A 35%, transparent 75%)",
+              filter: "blur(8px)",
+              zIndex: 1,
+            }}
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{ opacity: [0, 1, 0.7], scaleY: 1 }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+          />
+        )}
+      </AnimatePresence>
       {/* Envelope body */}
       <svg
         viewBox="0 0 320 220"
@@ -88,7 +107,7 @@ function EnvelopeSVG({ isOpen }: { isOpen: boolean }) {
   );
 }
 
-export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
+export function EnvelopeIntro({ onOpen, onOpenStart, isOpened }: EnvelopeIntroProps) {
   const [hinted, setHinted] = useState(false);
   const [localOpen, setLocalOpen] = useState(false);
 
@@ -100,8 +119,9 @@ export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
   function handleClick() {
     if (localOpen) return;
     setLocalOpen(true);
-    // Let the flap animate (~1s) before transitioning
-    setTimeout(() => onOpen(), 1800);
+    onOpenStart();
+    // Fire scene switch once glow has filled the screen (~1.3s)
+    setTimeout(() => onOpen(), 1300);
   }
 
   return (
