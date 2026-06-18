@@ -148,7 +148,7 @@ export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
           className="mb-8 text-center"
         >
           <p
-            className="text-sm tracking-widest uppercase font-body"
+            className="text-sm tracking-widest uppercase font-display"
             style={{ color: "#8C7B6A", letterSpacing: "0.3em" }}
           >
             دعوة زفاف

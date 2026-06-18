@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+/* ─── Custom Font Faces ─── */
+@font-face {
+  font-family: "YearOfHandicrafts";
+  src: url("/fonts/TheYearofHandicrafts-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "YearOfHandicrafts";
+  src: url("/fonts/TheYearofHandicrafts-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "YearOfHandicrafts";
+  src: url("/fonts/TheYearofHandicrafts-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "YearOfHandicrafts";
+  src: url("/fonts/TheYearofHandicrafts-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "YearOfHandicrafts";
+  src: url("/fonts/TheYearofHandicrafts-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "BaradaRiqa";
+  src: url("/fonts/royal-arabic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ─── Design Tokens ─── */
 @theme inline {
   /* Color palette */
@@ -20,8 +64,8 @@
   --color-smoke:          #8C7B6A;
 
   /* Typography */
-  --font-display:  "Amiri", "Noto Naskh Arabic", Georgia, serif;
-  --font-body:     "Cairo", "Tajawal", system-ui, sans-serif;
+  --font-display:  "YearOfHandicrafts", "Amiri", Georgia, serif;
+  --font-body:     "YearOfHandicrafts", "Tajawal", system-ui, sans-serif;
 
   /* Shadows */
   --shadow-paper: 0 2px 16px 0 rgba(28,18,9,0.08), 0 1px 4px 0 rgba(28,18,9,0.06);
@@ -44,7 +88,7 @@ html {
 body {
   background-color: #FAF7F0;
   color: #1C1209;
-  font-family: "Cairo", "Tajawal", system-ui, sans-serif;
+  font-family: "YearOfHandicrafts", "Tajawal", system-ui, sans-serif;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -53,11 +97,15 @@ body {
 
 /* ─── Font Classes ─── */
 .font-display {
-  font-family: "Amiri", "Noto Naskh Arabic", Georgia, serif;
+  font-family: "YearOfHandicrafts", "Amiri", Georgia, serif;
 }
 
 .font-body {
-  font-family: "Cairo", "Tajawal", system-ui, sans-serif;
+  font-family: "YearOfHandicrafts", "Amiri", Georgia, serif;
+}
+
+.font-names {
+  font-family: "BaradaRiqa", "Amiri", Georgia, serif;
 }
 
 /* ─── Paper Grain Texture via CSS noise ─── */

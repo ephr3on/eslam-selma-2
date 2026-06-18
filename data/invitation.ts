@@ -19,7 +19,8 @@ export const invitationData = {
     title: "زفاف إسلام وسلمى",
     date: "20260911",
     time: "190000",
-    location: "فندق بوليفارد عُمان",
+    location: "فندق بوليفارد عُمان، عمان، الأردن",
+    mapUrl: "https://maps.app.goo.gl/NNdBrTrAtD2ksFrU8",
   },
   basmala: "بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيم",
   quranVerse: [

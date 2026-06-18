@@ -175,7 +175,7 @@ function TunisiaMap({ inView }: { inView: boolean }) {
     >
       {/* Coastal outline */}
       <motion.path
-        d="M28 22 Q58 10 98 14 Q138 18 163 32 Q176 44 173 62 Q170 82 163 102 Q165 125 170 158 Q165 192 172 225"
+        d="M28 22 Q58 10 98 14 T163 32 T173 62 T163 102 T170 158 T172 225"
         stroke="#C17A5E"
         strokeWidth="1.8"
         fill="none"
@@ -420,7 +420,7 @@ export function CitiesDrawingScene() {
         >
           <EgyptMap inView={inView} />
           <div className="mt-4 text-center">
-            <p className="font-display text-lg" style={{ color: "#3D2E1E" }}>إسلام</p>
+            <p className="font-names text-lg" style={{ color: "#3D2E1E" }}>إسلام</p>
             <p className="font-body text-xs mt-0.5" style={{ color: "#8C7B6A" }}>الشرقية، مصر</p>
           </div>
         </motion.div>
@@ -483,7 +483,7 @@ export function CitiesDrawingScene() {
         >
           <TunisiaMap inView={inView} />
           <div className="mt-4 text-center">
-            <p className="font-display text-lg" style={{ color: "#3D2E1E" }}>سلمى</p>
+            <p className="font-names text-lg" style={{ color: "#3D2E1E" }}>سلمى</p>
             <p className="font-body text-xs mt-0.5" style={{ color: "#8C7B6A" }}>سوسة، تونس</p>
           </div>
         </motion.div>

@@ -53,7 +53,7 @@ export function ClosingBlessing() {
         aria-hidden="true"
       >
         <motion.span
-          className="font-display"
+          className="font-names"
           style={{ fontSize: "min(30vw, 200px)", color: "#B8943F", opacity: 0.04, lineHeight: 1 }}
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 0.04 } : {}}
@@ -135,7 +135,7 @@ export function ClosingBlessing() {
             }}
           >
             <span
-              className="font-display select-none"
+              className="font-names select-none"
               style={{ color: "#B8943F", fontSize: "1rem" }}
             >
               {invitationData.names.monogram}

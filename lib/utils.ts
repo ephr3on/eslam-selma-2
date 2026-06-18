@@ -10,16 +10,18 @@ export function buildGoogleCalendarUrl(event: {
   date: string;
   time: string;
   location: string;
+  mapUrl?: string;
 }) {
   const start = `${event.date}T${event.time}`;
   const end = `${event.date}T230000`;
-  const params = new URLSearchParams({
+  const params: Record<string, string> = {
     action: "TEMPLATE",
     text: event.title,
     dates: `${start}/${end}`,
     location: event.location,
-  });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  };
+  if (event.mapUrl) params.details = event.mapUrl;
+  return `https://calendar.google.com/calendar/render?${new URLSearchParams(params).toString()}`;
 }
 
 export function generateICS(event: {
@@ -27,10 +29,12 @@ export function generateICS(event: {
   date: string;
   time: string;
   location: string;
+  mapUrl?: string;
 }): string {
   const start = `${event.date}T${event.time}`;
   const end = `${event.date}T230000`;
-  return [
+  const escapedLocation = event.location.replace(/,/g, "\\,");
+  const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Eslam & Selma Wedding//AR",
@@ -40,11 +44,12 @@ export function generateICS(event: {
     `DTSTART:${start}`,
     `DTEND:${end}`,
     `SUMMARY:${event.title}`,
-    `LOCATION:${event.location}`,
+    `LOCATION:${escapedLocation}`,
     "UID:eslam-selma-wedding-20260911@invitation",
     "STATUS:CONFIRMED",
     "TRANSP:OPAQUE",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
+  ];
+  if (event.mapUrl) lines.push(`URL:${event.mapUrl}`);
+  lines.push("END:VEVENT", "END:VCALENDAR");
+  return lines.join("\r\n");
 }

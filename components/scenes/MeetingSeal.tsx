@@ -183,13 +183,13 @@ export function MeetingSeal() {
         transition={{ duration: 1, delay: 1, ease: [0.22, 1, 0.36, 1] }}
       >
         <span
-          className="font-display text-3xl md:text-5xl"
+          className="font-names text-3xl md:text-5xl"
           style={{ color: "#3D2E1E" }}
         >
           {invitationData.names.groom}
         </span>
         <motion.span
-          className="font-display text-2xl md:text-4xl"
+          className="font-names text-2xl md:text-4xl"
           style={{ color: "#B8943F" }}
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -197,7 +197,7 @@ export function MeetingSeal() {
           و
         </motion.span>
         <span
-          className="font-display text-3xl md:text-5xl"
+          className="font-names text-3xl md:text-5xl"
           style={{ color: "#3D2E1E" }}
         >
           {invitationData.names.bride}

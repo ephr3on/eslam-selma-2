@@ -125,7 +125,7 @@ function CardInner() {
             aria-hidden="true"
           />
 
-          <div className="relative z-10 px-6 py-7 flex flex-col items-center text-center gap-5">
+          <div className="relative z-10 px-6 py-5 flex flex-col items-center text-center gap-4">
             {/* Basmala */}
             <motion.p
               initial={{ opacity: 0 }}
@@ -153,17 +153,6 @@ function CardInner() {
               ))}
             </motion.div>
 
-            {/* Small ref */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.9, duration: 0.6 }}
-              className="font-body text-xs"
-              style={{ color: "#8C7B6A" }}
-            >
-              {invitationData.quranRef}
-            </motion.p>
-
             {/* Divider */}
             <div
               className="w-24 h-px"
@@ -175,10 +164,10 @@ function CardInner() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 1, duration: 0.8, type: "spring", stiffness: 200 }}
+              transition={{ delay: 0.9, duration: 0.8, type: "spring", stiffness: 200 }}
             >
               <p
-                className="font-display"
+                className="font-names"
                 style={{ color: "#1C1209", fontSize: "1.8rem", lineHeight: "1.3" }}
               >
                 {invitationData.names.ar}
@@ -189,7 +178,7 @@ function CardInner() {
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.2, duration: 0.8 }}
+              transition={{ delay: 1.1, duration: 0.8 }}
               className="font-body text-sm"
               style={{ color: "#6B5A47", lineHeight: "1.8" }}
             >
@@ -199,37 +188,28 @@ function CardInner() {
             {/* Ornament */}
             <IslamicGeometryLine className="w-full opacity-50" />
 
-            {/* Aqd date (smaller, above main date) */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.3, duration: 0.8 }}
-              className="flex flex-col items-center gap-0.5"
-            >
-              <p className="font-body text-xs" style={{ color: "#8C7B6A" }}>عقد الزواج</p>
-              <p className="font-display text-sm" style={{ color: "#6B5A47" }}>{invitationData.aqdDate}</p>
-            </motion.div>
-
-            {/* Thin divider between dates */}
-            <div className="w-8 h-px" style={{ background: "#D4B96A", opacity: 0.4 }} aria-hidden="true" />
-
-            {/* Wedding celebration date block */}
+            {/* Wedding date — prominent */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.4, duration: 0.8 }}
-              className="flex flex-col items-center gap-1"
+              transition={{ delay: 1.3, duration: 0.8 }}
+              className="flex flex-col items-center gap-2"
             >
-              <p className="font-body text-xs mb-0.5" style={{ color: "#8C7B6A" }}>حفل الزفاف</p>
               <p
-                className="font-display text-base"
-                style={{ color: "#3D2E1E" }}
+                className="font-display text-xs tracking-widest"
+                style={{ color: "#8C7B6A", letterSpacing: "0.25em" }}
+              >
+                حفل الزفاف
+              </p>
+              <p
+                className="font-display text-2xl"
+                style={{ color: "#1C1209" }}
               >
                 {invitationData.weddingDate}
               </p>
               <p
-                className="font-body text-sm"
-                style={{ color: "#6B5A47" }}
+                className="font-display text-lg"
+                style={{ color: "#B8943F" }}
               >
                 {invitationData.weddingTime}
               </p>
@@ -239,7 +219,7 @@ function CardInner() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.6, duration: 0.8 }}
+              transition={{ delay: 1.5, duration: 0.8 }}
               className="flex flex-col items-center gap-0.5"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="mb-1">
@@ -265,7 +245,7 @@ function CardInner() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.8, duration: 0.8 }}
+              transition={{ delay: 1.7, duration: 0.8 }}
               className="flex flex-col items-center gap-3 w-full"
             >
               <CardButton
