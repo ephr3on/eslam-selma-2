@@ -89,11 +89,11 @@ function CardInner() {
       transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Card shadow layers (depth effect) */}
-      <div
+      {/* <div
         className="absolute inset-0 translate-y-3 translate-x-1 rounded-sm"
         style={{ background: "#E6D5AF", opacity: 0.5 }}
         aria-hidden="true"
-      />
+      /> */}
       <div
         className="absolute inset-0 translate-y-1.5 rounded-sm"
         style={{ background: "#EDE3CA", opacity: 0.6 }}
