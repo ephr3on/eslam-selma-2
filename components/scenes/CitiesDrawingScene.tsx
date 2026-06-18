@@ -784,13 +784,11 @@ export function CitiesDrawingScene() {
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 1.4, delay: 3.2, ease: "easeOut" }}
       >
-        يا جنّة روحي.. يا عين اليقين
         <br />
-        يا بسمةَ عُمري وعَهدي المُبين
+        بين أرضٍ تعرف النيل، ومدينةٍ تحفظ زرقة البحر
         <br />
-        سأبني لعينيك ما تشتهين
+        كُتبت الحكاية بهدوء… حتى صار اللقاء قدرًا جميلًا
         <br />
-        حِصنًا من الحُبِّ لا يستكين
       </motion.p>
 
     </section>
