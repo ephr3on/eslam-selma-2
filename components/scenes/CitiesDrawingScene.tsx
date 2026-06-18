@@ -785,9 +785,9 @@ export function CitiesDrawingScene() {
         transition={{ duration: 1.4, delay: 3.2, ease: "easeOut" }}
       >
         <br />
-        بين أرضٍ تعرف النيل، ومدينةٍ تحفظ زرقة البحر
+        من الشرقية إلى سوسة
         <br />
-        كُتبت الحكاية بهدوء… حتى صار اللقاء قدرًا جميلًا
+        ومن ضفتي الحلم إلى جمال الواقع
         <br />
       </motion.p>
 
