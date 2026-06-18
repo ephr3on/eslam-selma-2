@@ -207,14 +207,34 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
             {localOpen && <GoldParticles count={22} active={localOpen} />}
           </motion.div>
 
-          {/* Stamp button — above all envelope layers */}
+          {/* Ripple rings — start and end at opacity:0 so the loop restart is
+              invisible. scale goes 1→1.05→2 so opacity peaks just after the
+              ring appears at stamp size, then fades as it expands. */}
+          <motion.span
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+            style={{ width: 80, height: 80, border: "1.5px solid rgba(212,185,106,0.9)", zIndex: 19 }}
+            initial={{ opacity: 0, scale: 1 }}
+            animate={stampClicked ? { opacity: 0 } : { scale: [1, 1.05, 2], opacity: [0, 0.9, 0] }}
+            transition={stampClicked ? { duration: 0.15 } : { duration: 2, repeat: Infinity, ease: "easeOut", times: [0, 0.12, 1] }}
+            aria-hidden="true"
+          />
+          <motion.span
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+            style={{ width: 80, height: 80, border: "1.5px solid rgba(212,185,106,0.6)", zIndex: 19 }}
+            initial={{ opacity: 0, scale: 1 }}
+            animate={stampClicked ? { opacity: 0 } : { scale: [1, 1.05, 2], opacity: [0, 0.6, 0] }}
+            transition={stampClicked ? { duration: 0.15 } : { duration: 2, repeat: Infinity, delay: 1, ease: "easeOut", times: [0, 0.12, 1] }}
+            aria-hidden="true"
+          />
+
+          {/* Stamp button — gentle scale pulse, independent of the rings */}
           <motion.button
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 focus:outline-none cursor-pointer"
             style={{ zIndex: 20 }}
-            animate={stampClicked ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.92 }}
-            transition={{ duration: 0.35 }}
+            animate={stampClicked ? { scale: 0, opacity: 0 } : { scale: [1, 1.07, 1], opacity: 1 }}
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.9 }}
+            transition={stampClicked ? { duration: 0.35 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
             onClick={handleStampTap}
             aria-label="اضغط لفتح الدعوة"
           >
