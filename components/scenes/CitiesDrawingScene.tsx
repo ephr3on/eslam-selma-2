@@ -775,10 +775,11 @@ export function CitiesDrawingScene() {
 
       {/* Poem — centered below the two names */}
       <motion.p
-        className="font-display text-xl md:text-2xl text-center z-10 mt-6"
+        className="font-display text-center z-10 mt-6"
         style={{
           color: "#3D2E1E",
-          lineHeight: "2.4",
+          fontSize: "0.95rem",
+          lineHeight: "2.3",
         }}
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
