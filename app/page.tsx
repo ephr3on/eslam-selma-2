@@ -13,6 +13,15 @@ export default function WeddingInvitation() {
   const [isOpened, setIsOpened] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  function handleStampClick() {
+    if (isTransitioning) return;
+    // 3500 ms (photo rises) + 5000 ms (photo stands) = 8500 ms
+    setTimeout(() => {
+      setIsTransitioning(true);
+      setTimeout(() => setIsOpened(true), 1800);
+    }, 8500);
+  }
+
   // Lock scroll while envelope is showing
   useEffect(() => {
     document.body.style.overflow = isOpened ? "" : "hidden";
@@ -21,30 +30,81 @@ export default function WeddingInvitation() {
 
   return (
     <main dir="rtl">
-      {/* Golden glow — fixed so it survives the scene switch */}
+      {/* ── Cinematic glow transition — three fixed layers ────────────────
+          Layer 1 (z:60): deep golden pulse from the envelope centre
+          Layer 2 (z:61): warm cream aura expanding outward
+          Layer 3 (z:62): blinding white flash that completes the wipe     */}
+
+      {/* Layer 1 — deep golden burst */}
       {isTransitioning && (
         <motion.div
           className="fixed inset-0 pointer-events-none"
           style={{
             zIndex: 60,
+            background:
+              "radial-gradient(ellipse 90% 80% at 50% 48%, rgba(255,210,80,0.85) 0%, rgba(212,175,80,0.65) 20%, rgba(180,145,55,0.3) 48%, transparent 70%)",
+          }}
+          initial={{ opacity: 0 }}
+          animate={isOpened ? { opacity: 0 } : { opacity: [0, 1, 0.75, 1] }}
+          transition={
+            isOpened
+              ? { duration: 1.6, ease: "easeOut" }
+              : { duration: 0.9, times: [0, 0.35, 0.6, 1], ease: "easeOut" }
+          }
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Layer 2 — warm cream aura */}
+      {isTransitioning && (
+        <motion.div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            zIndex: 61,
             background: [
-              "radial-gradient(ellipse 160% 140% at 50% 44%,",
-              "  rgba(255,255,240,1)         0%,",
-              "  rgba(255,251,220,0.95)      10%,",
-              "  rgba(248,238,190,0.85)      22%,",
-              "  rgba(236,217,154,0.65)      38%,",
-              "  rgba(220,195,110,0.30)      55%,",
-              "  rgba(212,185,106,0.08)      72%,",
-              "  rgba(212,185,106,0)         84%",
+              "radial-gradient(ellipse 160% 140% at 50% 46%,",
+              "  rgba(255,255,235,0.98)  0%,",
+              "  rgba(255,250,210,0.88) 12%,",
+              "  rgba(248,235,180,0.72) 26%,",
+              "  rgba(236,212,140,0.48) 44%,",
+              "  rgba(220,190,100,0.18) 62%,",
+              "  transparent            80%",
               ")",
             ].join(""),
           }}
           initial={{ opacity: 0 }}
-          animate={isOpened ? { opacity: 0 } : { opacity: 1 }}
+          animate={isOpened ? { opacity: 0 } : { opacity: [0, 0, 1] }}
           transition={
             isOpened
-              ? { duration: 1.8, ease: "easeOut" }
-              : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }
+              ? { duration: 2, ease: "easeOut" }
+              : { duration: 1.1, times: [0, 0.38, 1], ease: [0.22, 1, 0.36, 1] }
+          }
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Layer 3 — white flash (completes the wipe) */}
+      {isTransitioning && (
+        <motion.div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            zIndex: 62,
+            background: [
+              "radial-gradient(ellipse 150% 130% at 50% 46%,",
+              "  rgba(255,255,255,1)     0%,",
+              "  rgba(255,252,228,0.95) 14%,",
+              "  rgba(255,245,195,0.70) 30%,",
+              "  rgba(245,225,155,0.28) 52%,",
+              "  transparent            72%",
+              ")",
+            ].join(""),
+          }}
+          initial={{ opacity: 0 }}
+          animate={isOpened ? { opacity: 0 } : { opacity: [0, 0, 0, 1] }}
+          transition={
+            isOpened
+              ? { duration: 2.4, ease: [0.4, 0, 0.2, 1] }
+              : { duration: 1.3, times: [0, 0.45, 0.65, 1], ease: [0.22, 1, 0.36, 1] }
           }
           aria-hidden="true"
         />
@@ -62,9 +122,8 @@ export default function WeddingInvitation() {
             transition={{ duration: 0.2 }}
           >
             <EnvelopeIntro
-              onOpenStart={() => setIsTransitioning(true)}
-              onOpen={() => setIsOpened(true)}
-              isOpened={false}
+              onStampClick={handleStampClick}
+              isTransitioning={isTransitioning}
             />
           </motion.div>
         )}
