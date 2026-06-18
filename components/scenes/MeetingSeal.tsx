@@ -222,9 +222,9 @@ export function MeetingSeal() {
         className="text-center px-6 max-w-xs"
       >
         <p className="font-display text-base" style={{ color: "#6B5A47", lineHeight: "2.2" }}>
-          رُسم الطريق بالحبر والضوء،
-          <br />
-          حتى التقت المدينتان في وعدٍ واحد.
+        بين أرضٍ تعرف النيل، ومدينةٍ تحفظ زرقة البحر
+        <br/>
+        كُتبت الحكاية بهدوء… حتى صار اللقاء قدرًا جميلًا
         </p>
       </motion.div>
 

@@ -399,10 +399,10 @@ export function CitiesDrawingScene() {
         variant="rise"
       >
         <p className="font-display text-xl md:text-2xl mb-2" style={{ color: "#3D2E1E" }}>
-          مدينتان تتحقّقان في وجود بعضهما
+          مدينتان تتحققان في وجود بعضهما
         </p>
         <p className="font-body text-xs" style={{ color: "#8C7B6A", letterSpacing: "0.05em" }}>
-          رُسمت الطريق بالحبر والضوء
+          رُسم الطريق بالحبر والضوء
         </p>
       </AnimatedArabicText>
 
@@ -504,7 +504,7 @@ export function CitiesDrawingScene() {
         <p className="font-display text-base" style={{ color: "#6B5A47", lineHeight: "2.2" }}>
           من الشرقية إلى سوسة،
           <br />
-          ومن ضفتي الحلم إلى بيتٍ واحد
+          ومن ضفتي الحلم إلى بيتٍ الحقيقة
         </p>
       </AnimatedArabicText>
     </section>

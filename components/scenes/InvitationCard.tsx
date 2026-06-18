@@ -140,18 +140,42 @@ function CardInner() {
             {/* Ornament */}
             <IslamicGeometryLine className="w-full opacity-60" />
 
+            {/* Quran closing */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.6, duration: 0.9 }}
+              className="font-display"
+              style={{ color: "#6B5A47", fontSize: "0.9rem", lineHeight: "2" }}
+            >
+              وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
+            </motion.p>
+
+            {/* Divider before names */}
+            <div
+              className="w-24 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
+              aria-hidden="true"
+            />
+
             {/* Names */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.7, duration: 0.8, type: "spring", stiffness: 200 }}
+              transition={{ delay: 0.8, duration: 0.8, type: "spring", stiffness: 200 }}
+              className="flex flex-col items-center gap-1"
             >
               <p
-                className="font-names"
-                style={{ color: "#1C1209", fontSize: "1.8rem", lineHeight: "1.3" }}
+                className="font-names gold-shimmer"
+                style={{ fontSize: "2.4rem", lineHeight: "1.2" }}
               >
                 {invitationData.names.ar}
               </p>
+              <div
+                className="w-16 h-px"
+                style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
+                aria-hidden="true"
+              />
             </motion.div>
 
             {/* Invitation text */}
@@ -176,7 +200,7 @@ function CardInner() {
               className="flex flex-col items-center gap-2"
             >
               <p
-                className="text-xs tracking-widest"
+                // className="text-xs tracking-widest"
                 style={{ color: "#8C7B6A", fontFamily: '"YearOfHandicrafts", serif' }}
               >
                 حفل الزفاف
@@ -286,22 +310,6 @@ export function InvitationCard() {
           <rect width="100%" height="100%" fill="url(#diamonds)" />
         </svg>
       </div>
-
-      {/* Section heading */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-12 z-10"
-      >
-        <p
-          className="font-body text-xs tracking-widest uppercase mb-2"
-          style={{ color: "#8C7B6A"}}
-        >
-          الدعوة
-        </p>
-      </motion.div>
 
       {/* The card */}
       <div className="relative z-10 w-full max-w-sm">
