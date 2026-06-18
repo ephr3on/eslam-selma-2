@@ -147,12 +147,12 @@ export function EnvelopeIntro({ onOpen, isOpened }: EnvelopeIntroProps) {
           transition={{ delay: 1.2, duration: 1 }}
           className="mb-8 text-center"
         >
-          <p
-            className="text-sm tracking-widest uppercase"
-            style={{ color: "#8C7B6A", letterSpacing: "0.3em", fontFamily: '"YearOfHandicrafts", serif' }}
+          {/* <p
+            // className="text-sm tracking-widest uppercase"
+            style={{ color: "#8C7B6A", fontFamily: '"YearOfHandicrafts", serif' }}
           >
             دعوة زفاف
-          </p>
+          </p> */}
         </motion.div>
 
         {/* The Envelope + Hint */}

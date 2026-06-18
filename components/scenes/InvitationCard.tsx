@@ -140,31 +140,11 @@ function CardInner() {
             {/* Ornament */}
             <IslamicGeometryLine className="w-full opacity-60" />
 
-            {/* Quran verse */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              className="font-display leading-loose"
-              style={{ color: "#3D2E1E", fontSize: "0.9rem" }}
-            >
-              {invitationData.quranVerse.map((line, i) => (
-                <p key={i}>{line}</p>
-              ))}
-            </motion.div>
-
-            {/* Divider */}
-            <div
-              className="w-24 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
-              aria-hidden="true"
-            />
-
             {/* Names */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.9, duration: 0.8, type: "spring", stiffness: 200 }}
+              transition={{ delay: 0.7, duration: 0.8, type: "spring", stiffness: 200 }}
             >
               <p
                 className="font-names"
@@ -178,7 +158,7 @@ function CardInner() {
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.1, duration: 0.8 }}
+              transition={{ delay: 0.9, duration: 0.8 }}
               className="font-body text-sm"
               style={{ color: "#6B5A47", lineHeight: "1.8" }}
             >
@@ -192,12 +172,12 @@ function CardInner() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.3, duration: 0.8 }}
+              transition={{ delay: 1.1, duration: 0.8 }}
               className="flex flex-col items-center gap-2"
             >
               <p
                 className="text-xs tracking-widest"
-                style={{ color: "#8C7B6A", letterSpacing: "0.25em", fontFamily: '"YearOfHandicrafts", serif' }}
+                style={{ color: "#8C7B6A", fontFamily: '"YearOfHandicrafts", serif' }}
               >
                 حفل الزفاف
               </p>
@@ -219,7 +199,7 @@ function CardInner() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.5, duration: 0.8 }}
+              transition={{ delay: 1.3, duration: 0.8 }}
               className="flex flex-col items-center gap-0.5"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="mb-1">
@@ -245,7 +225,7 @@ function CardInner() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.7, duration: 0.8 }}
+              transition={{ delay: 1.5, duration: 0.8 }}
               className="flex flex-col items-center gap-3 w-full"
             >
               <CardButton
@@ -317,7 +297,7 @@ export function InvitationCard() {
       >
         <p
           className="font-body text-xs tracking-widest uppercase mb-2"
-          style={{ color: "#8C7B6A", letterSpacing: "0.3em" }}
+          style={{ color: "#8C7B6A"}}
         >
           الدعوة
         </p>
