@@ -561,7 +561,7 @@ export function CitiesDrawingScene() {
 
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center px-4 py-6 md:py-20 overflow-hidden"
       style={{ background: "linear-gradient(180deg, #EDE4CC 0%, #F5EDD6 25%, #FAF7F0 60%, #F5EDD6 100%)" }}
     >
       {/* Heart trail canvas — full-section overlay, pointer-events disabled */}
