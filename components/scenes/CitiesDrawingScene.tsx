@@ -420,8 +420,11 @@ export function CitiesDrawingScene() {
         >
           <EgyptMap inView={inView} />
           <div className="mt-4 text-center">
-            <p className="font-names text-lg" style={{ color: "#3D2E1E" }}>إسلام</p>
-            <p className="font-body text-xs mt-0.5" style={{ color: "#8C7B6A" }}>الشرقية، مصر</p>
+            <p className="font-names text-2xl" style={{ color: "#B8943F" }}>إسلام</p>
+            <div className="flex justify-center my-1" aria-hidden="true">
+              <div className="h-px w-8" style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }} />
+            </div>
+            <p className="font-body text-xs" style={{ color: "#8C7B6A" }}>الشرقية، مصر</p>
           </div>
         </motion.div>
 
@@ -483,8 +486,11 @@ export function CitiesDrawingScene() {
         >
           <TunisiaMap inView={inView} />
           <div className="mt-4 text-center">
-            <p className="font-names text-lg" style={{ color: "#3D2E1E" }}>سلمى</p>
-            <p className="font-body text-xs mt-0.5" style={{ color: "#8C7B6A" }}>سوسة، تونس</p>
+            <p className="font-names text-2xl" style={{ color: "#B8943F" }}>سلمى</p>
+            <div className="flex justify-center my-1" aria-hidden="true">
+              <div className="h-px w-8" style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }} />
+            </div>
+            <p className="font-body text-xs" style={{ color: "#8C7B6A" }}>سوسة، تونس</p>
           </div>
         </motion.div>
       </div>

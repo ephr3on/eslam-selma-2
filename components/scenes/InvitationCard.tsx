@@ -196,8 +196,8 @@ function CardInner() {
               className="flex flex-col items-center gap-2"
             >
               <p
-                className="font-display text-xs tracking-widest"
-                style={{ color: "#8C7B6A", letterSpacing: "0.25em" }}
+                className="text-xs tracking-widest"
+                style={{ color: "#8C7B6A", letterSpacing: "0.25em", fontFamily: '"YearOfHandicrafts", serif' }}
               >
                 حفل الزفاف
               </p>
