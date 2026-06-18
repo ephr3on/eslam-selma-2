@@ -23,6 +23,8 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/wedding-photo.jpg" />
         <link rel="preload" as="image" href="/eslam.jpg" />
         <link rel="preload" as="image" href="/selma.jpg" />
+        <link rel="preload" as="image" href="/stamp.png" />
+        <link rel="preload" as="audio" href="/background_music.mp3" />
       </head>
       <body className="min-h-screen overflow-x-hidden">
         {children}
