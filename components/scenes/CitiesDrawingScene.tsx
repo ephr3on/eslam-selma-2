@@ -623,10 +623,9 @@ export function CitiesDrawingScene() {
                 return (
                   <motion.p
                     key={li}
-                    className="font-display overflow-hidden"
+                    className="font-display text-xl md:text-2xl overflow-hidden"
                     style={{
                       color: isFinal ? "#1C1209" : "#3D2E1E",
-                      fontSize: isFinal ? "1.08rem" : "0.95rem",
                       lineHeight: "2.3",
                       letterSpacing: isFinal ? "0.01em" : undefined,
                     }}
