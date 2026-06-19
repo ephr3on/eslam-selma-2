@@ -91,7 +91,7 @@ function releaseBirds(originRect: DOMRect): void {
 
   // Emerge from the flap opening — top-center of the envelope
   const ox = originRect.left + originRect.width * 0.5;
-  const oy = originRect.top + originRect.height * 0.06;
+  const oy = originRect.top + originRect.height * 0.5;
 
   const svgNS = 'http://www.w3.org/2000/svg';
 
