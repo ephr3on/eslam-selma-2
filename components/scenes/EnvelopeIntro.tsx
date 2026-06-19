@@ -1,9 +1,163 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GoldParticles } from "@/components/ui/GoldParticles";
 import { invitationData } from "@/data/invitation";
+
+// ─── Bird Animation System ──────────────────────────────────────────────────
+
+const BIRD_COLORS = ['#D4B96A', '#ECD99A', '#F2E8C8', '#C9A84C', '#F8F2E0'] as const;
+
+// Elegant M-shaped wing silhouette: two bezier curves meeting at the body center
+const WING_PATH = 'M-13,-2 C-9,-8 -4,-10 0,-7 C4,-10 9,-8 13,-2';
+
+// 9 far-burst birds (Phase 1 only – fly away dramatically)
+// 5 near-burst birds (Phase 1 burst, then transition to Phase 2 looping orbit)
+const BIRD_DATA = [
+  // Far burst – Phase 1 only
+  { burst: 'bird-burst-far-left',    orbit: null,                  delay: 0.05, burstDur: 5.2, orbitDur: 0,   size: 1.00, colorIdx: 0 as const, glow: true  },
+  { burst: 'bird-burst-far-right',   orbit: null,                  delay: 0.08, burstDur: 5.0, orbitDur: 0,   size: 1.00, colorIdx: 0 as const, glow: true  },
+  { burst: 'bird-burst-swoop-left',  orbit: null,                  delay: 0.18, burstDur: 4.8, orbitDur: 0,   size: 0.82, colorIdx: 1 as const, glow: false },
+  { burst: 'bird-burst-swoop-right', orbit: null,                  delay: 0.25, burstDur: 4.6, orbitDur: 0,   size: 0.78, colorIdx: 2 as const, glow: false },
+  { burst: 'bird-burst-far-left',    orbit: null,                  delay: 0.55, burstDur: 4.8, orbitDur: 0,   size: 0.70, colorIdx: 4 as const, glow: false },
+  { burst: 'bird-burst-far-right',   orbit: null,                  delay: 0.62, burstDur: 4.5, orbitDur: 0,   size: 0.68, colorIdx: 1 as const, glow: false },
+  { burst: 'bird-burst-swoop-left',  orbit: null,                  delay: 0.80, burstDur: 4.3, orbitDur: 0,   size: 0.66, colorIdx: 3 as const, glow: false },
+  { burst: 'bird-burst-swoop-right', orbit: null,                  delay: 0.88, burstDur: 4.2, orbitDur: 0,   size: 0.72, colorIdx: 2 as const, glow: false },
+  { burst: 'bird-burst-far-left',    orbit: null,                  delay: 0.95, burstDur: 4.5, orbitDur: 0,   size: 0.65, colorIdx: 4 as const, glow: false },
+  // Near burst → orbit (Phase 1 + Phase 2)
+  { burst: 'bird-burst-near-left',   orbit: 'bird-orbit-ccw-wide', delay: 0.10, burstDur: 1.8, orbitDur: 7.0, size: 0.88, colorIdx: 0 as const, glow: true  },
+  { burst: 'bird-burst-near-right',  orbit: 'bird-orbit-cw-wide',  delay: 0.20, burstDur: 1.8, orbitDur: 8.0, size: 0.92, colorIdx: 3 as const, glow: false },
+  { burst: 'bird-burst-near-up',     orbit: 'bird-orbit-drift-up', delay: 0.30, burstDur: 2.0, orbitDur: 9.0, size: 0.80, colorIdx: 1 as const, glow: false },
+  { burst: 'bird-burst-near-ul',     orbit: 'bird-orbit-tall',     delay: 0.38, burstDur: 1.6, orbitDur: 7.5, size: 0.75, colorIdx: 0 as const, glow: true  },
+  { burst: 'bird-burst-near-ur',     orbit: 'bird-orbit-figure8',  delay: 0.45, burstDur: 1.7, orbitDur: 8.5, size: 0.78, colorIdx: 2 as const, glow: false },
+];
+
+// Module-level handle so the component can trigger fade-out via isTransitioning
+let _birdsContainer: HTMLDivElement | null = null;
+
+function fadeBirdsOut(): void {
+  if (!_birdsContainer) return;
+  const el = _birdsContainer;
+  _birdsContainer = null;
+  el.style.transition = 'opacity 2s ease';
+  el.style.opacity = '0';
+  setTimeout(() => el.remove(), 2100);
+}
+
+function makeBirdSvg(
+  svgNS: string,
+  color: string,
+  glow: boolean,
+): SVGSVGElement {
+  const svg = document.createElementNS(svgNS, 'svg') as SVGSVGElement;
+  svg.setAttribute('width', '36');
+  svg.setAttribute('height', '18');
+  svg.setAttribute('viewBox', '-16 -13 32 16');
+  svg.style.cssText = 'display:block;overflow:visible;';
+
+  if (glow) {
+    const halo = document.createElementNS(svgNS, 'path');
+    halo.setAttribute('d', WING_PATH);
+    halo.setAttribute('stroke', color);
+    halo.setAttribute('stroke-width', '5');
+    halo.setAttribute('fill', 'none');
+    halo.setAttribute('stroke-linecap', 'round');
+    halo.setAttribute('opacity', '0.16');
+    svg.appendChild(halo);
+  }
+
+  const wing = document.createElementNS(svgNS, 'path');
+  wing.setAttribute('d', WING_PATH);
+  wing.setAttribute('stroke', color);
+  wing.setAttribute('stroke-width', '1.35');
+  wing.setAttribute('fill', 'none');
+  wing.setAttribute('stroke-linecap', 'round');
+  wing.setAttribute('stroke-linejoin', 'round');
+  svg.appendChild(wing);
+
+  return svg;
+}
+
+function releaseBirds(originRect: DOMRect): void {
+  document.getElementById('bird-flock')?.remove();
+
+  const container = document.createElement('div');
+  container.id = 'bird-flock';
+  container.setAttribute('aria-hidden', 'true');
+  container.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;';
+  document.body.appendChild(container);
+  _birdsContainer = container;
+
+  // Emerge from the flap opening — top-center of the envelope
+  const ox = originRect.left + originRect.width * 0.5;
+  const oy = originRect.top + originRect.height * 0.06;
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  BIRD_DATA.forEach((bird) => {
+    const scale = bird.size;
+    const w = Math.round(36 * scale);
+    const h = Math.round(18 * scale);
+    const color = BIRD_COLORS[bird.colorIdx];
+
+    const svg = makeBirdSvg(svgNS, color, bird.glow);
+    svg.setAttribute('width', String(w));
+    svg.setAttribute('height', String(h));
+
+    const wrapper = document.createElement('div');
+    // Pixel-offset centering avoids transform collision with keyframe animations
+    wrapper.style.cssText = [
+      'position:absolute',
+      `left:${ox - w / 2}px`,
+      `top:${oy - h / 2}px`,
+      `animation:${bird.burst} ${bird.burstDur}s cubic-bezier(0.25,0.46,0.45,0.94) ${bird.delay}s forwards`,
+      'will-change:transform,opacity',
+    ].join(';');
+
+    if (bird.glow) {
+      wrapper.style.filter = `drop-shadow(0 0 4px ${color}) drop-shadow(0 0 8px rgba(212,185,106,0.35))`;
+    }
+
+    // For orbit birds: when burst ends, read actual position and switch to looping orbit
+    if (bird.orbit) {
+      const orbitAnim = bird.orbit;
+      const orbitDur = bird.orbitDur;
+      // Wing-flutter speed varies per bird so they feel independent
+      const flutterDur = (0.72 + bird.delay * 0.18).toFixed(2);
+
+      const onBurstEnd = () => {
+        wrapper.removeEventListener('animationend', onBurstEnd);
+        if (!container.isConnected) return;
+
+        // Capture current visual position (includes the translate from burst keyframe)
+        const rect = wrapper.getBoundingClientRect();
+        const opacity = parseFloat(window.getComputedStyle(wrapper).opacity);
+
+        // Reposition at actual screen location, strip the burst animation
+        wrapper.style.animation = 'none';
+        wrapper.style.left = `${rect.left}px`;
+        wrapper.style.top = `${rect.top}px`;
+        wrapper.style.opacity = String(Math.min(opacity + 0.05, 0.88));
+
+        // Force reflow so the new left/top land before we start the orbit
+        void wrapper.offsetHeight;
+
+        // Begin looping orbit and wing flutter
+        wrapper.style.animation = `${orbitAnim} ${orbitDur}s ease-in-out infinite`;
+        svg.style.animation = `bird-wing-flutter ${flutterDur}s ease-in-out infinite`;
+        svg.style.transformOrigin = '50% 50%';
+      };
+
+      wrapper.addEventListener('animationend', onBurstEnd);
+    }
+
+    wrapper.appendChild(svg);
+    container.appendChild(wrapper);
+  });
+}
+
+// ─── End Bird System ─────────────────────────────────────────────────────────
 
 interface EnvelopeIntroProps {
   onStampClick: () => void;
@@ -79,6 +233,7 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
   const [localOpen, setLocalOpen] = useState(false);
   const [stampClicked, setStampClicked] = useState(false);
   const [photoVisible, setPhotoVisible] = useState(false);
+  const envelopeRef = useRef<HTMLDivElement>(null);
   // Mobile (< 640 px): rise less so the photo stays near the envelope middle
   const [photoY, setPhotoY] = useState(-96);
 
@@ -94,9 +249,12 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
     return () => clearTimeout(t);
   }, []);
 
-  // Fade the photo out as soon as the glow transition begins
+  // When the scene transitions out, fade the photo and gracefully retire the birds
   useEffect(() => {
-    if (isTransitioning) setPhotoVisible(false);
+    if (isTransitioning) {
+      setPhotoVisible(false);
+      fadeBirdsOut();
+    }
   }, [isTransitioning]);
 
   function handleStampTap() {
@@ -105,6 +263,12 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
     setLocalOpen(true);
     onStampClick();
     setPhotoVisible(true);
+    // Release birds as the flap begins to open
+    setTimeout(() => {
+      if (envelopeRef.current) {
+        releaseBirds(envelopeRef.current.getBoundingClientRect());
+      }
+    }, 320);
   }
 
   return (
@@ -151,6 +315,7 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
               z:10 fold triangles (left/right/bottom) — mask the photo
                    while it is inside the envelope body                    */}
           <motion.div
+            ref={envelopeRef}
             className="relative w-72 h-48 sm:w-80 sm:h-52 md:w-96 md:h-64"
             style={{ filter: "drop-shadow(0 8px 24px rgba(28,18,9,0.12))", willChange: "filter" }}
           >

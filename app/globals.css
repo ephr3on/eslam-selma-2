@@ -143,9 +143,7 @@ body {
   animation: gold-shimmer 4s linear infinite;
 }
 
-/* ─── Stamp sonar rings ───────────────────────────────────────────────────
-   scale(0) at start → ring is 0 px wide → invisible even at opacity 0.85.
-   opacity 0 at end → invisible.  Loop restart is seamless either way.     */
+/* ─── Stamp sonar rings ─── */
 @keyframes sonar-ring {
   from { transform: scale(0); opacity: 0.85; }
   to   { transform: scale(2.5); opacity: 0; }
@@ -197,6 +195,137 @@ body {
 
 /* ─── Selection ─── */
 ::selection { background: #ECD99A; color: #1C1209; }
+
+/* ─── Bird Flight Animations ─── */
+
+/* Phase 1 – Burst (plays once, fill-mode: forwards) */
+
+/* Dramatic far-burst birds: fly off screen, Phase 1 only */
+@keyframes bird-burst-far-left {
+  0%   { transform: translate(0px,0px) scale(0.22) rotate(4deg);      opacity: 0; }
+  7%   { transform: translate(-18px,-34px) scale(1) rotate(-3deg);    opacity: 1; }
+  28%  { transform: translate(-115px,-155px) rotate(-13deg);           opacity: 0.9; }
+  58%  { transform: translate(-265px,-305px) rotate(-20deg);           opacity: 0.55; }
+  82%  { transform: translate(-395px,-415px) rotate(-26deg) scale(0.84); opacity: 0.16; }
+  100% { transform: translate(-510px,-498px) rotate(-29deg) scale(0.70); opacity: 0; }
+}
+
+@keyframes bird-burst-far-right {
+  0%   { transform: translate(0px,0px) scale(0.22) rotate(-4deg);     opacity: 0; }
+  7%   { transform: translate(18px,-34px) scale(1) rotate(3deg);      opacity: 1; }
+  28%  { transform: translate(115px,-155px) rotate(13deg);             opacity: 0.9; }
+  58%  { transform: translate(265px,-305px) rotate(20deg);             opacity: 0.55; }
+  82%  { transform: translate(395px,-415px) rotate(26deg) scale(0.84); opacity: 0.16; }
+  100% { transform: translate(510px,-498px) rotate(29deg) scale(0.70); opacity: 0; }
+}
+
+@keyframes bird-burst-swoop-left {
+  0%   { transform: translate(0px,0px) scale(0.20);                   opacity: 0; }
+  6%   { transform: translate(-10px,-24px) scale(1);                  opacity: 0.9; }
+  20%  { transform: translate(-65px,-90px) rotate(-9deg);             opacity: 0.85; }
+  46%  { transform: translate(-162px,-222px) rotate(-24deg);          opacity: 0.68; }
+  72%  { transform: translate(-284px,-364px) rotate(-29deg);          opacity: 0.28; }
+  100% { transform: translate(-410px,-498px) rotate(-33deg) scale(0.68); opacity: 0; }
+}
+
+@keyframes bird-burst-swoop-right {
+  0%   { transform: translate(0px,0px) scale(0.20);                   opacity: 0; }
+  6%   { transform: translate(10px,-24px) scale(1);                   opacity: 0.9; }
+  20%  { transform: translate(65px,-90px) rotate(9deg);               opacity: 0.85; }
+  46%  { transform: translate(162px,-222px) rotate(24deg);            opacity: 0.68; }
+  72%  { transform: translate(284px,-364px) rotate(29deg);            opacity: 0.28; }
+  100% { transform: translate(410px,-498px) rotate(33deg) scale(0.68); opacity: 0; }
+}
+
+/* Near-burst birds: settle at a visible position so Phase 2 orbit can continue */
+@keyframes bird-burst-near-left {
+  0%   { transform: translate(0px,0px) scale(0.22);                   opacity: 0; }
+  10%  { transform: translate(-12px,-28px) scale(1);                  opacity: 0.95; }
+  45%  { transform: translate(-105px,-185px) rotate(-10deg);          opacity: 0.9; }
+  100% { transform: translate(-145px,-265px) rotate(-8deg);           opacity: 0.82; }
+}
+
+@keyframes bird-burst-near-right {
+  0%   { transform: translate(0px,0px) scale(0.22);                   opacity: 0; }
+  10%  { transform: translate(12px,-28px) scale(1);                   opacity: 0.95; }
+  45%  { transform: translate(105px,-185px) rotate(10deg);            opacity: 0.9; }
+  100% { transform: translate(145px,-265px) rotate(8deg);             opacity: 0.82; }
+}
+
+@keyframes bird-burst-near-up {
+  0%   { transform: translate(0px,0px) scale(0.22);                   opacity: 0; }
+  10%  { transform: translate(-4px,-30px) scale(1);                   opacity: 0.95; }
+  45%  { transform: translate(-16px,-205px) rotate(-3deg);            opacity: 0.9; }
+  100% { transform: translate(-22px,-295px) rotate(-2deg);            opacity: 0.84; }
+}
+
+@keyframes bird-burst-near-ul {
+  0%   { transform: translate(0px,0px) scale(0.22);                   opacity: 0; }
+  10%  { transform: translate(-8px,-28px) scale(1);                   opacity: 0.92; }
+  45%  { transform: translate(-72px,-172px) rotate(-7deg);            opacity: 0.88; }
+  100% { transform: translate(-94px,-254px) rotate(-5deg);            opacity: 0.80; }
+}
+
+@keyframes bird-burst-near-ur {
+  0%   { transform: translate(0px,0px) scale(0.22);                   opacity: 0; }
+  10%  { transform: translate(8px,-28px) scale(1);                    opacity: 0.92; }
+  45%  { transform: translate(72px,-172px) rotate(7deg);              opacity: 0.88; }
+  100% { transform: translate(94px,-254px) rotate(5deg);              opacity: 0.80; }
+}
+
+/* Phase 2 – Orbit (infinite loop, transform only) */
+
+@keyframes bird-orbit-ccw-wide {
+  0%   { transform: translate(0px,0px)     rotate(-5deg); }
+  20%  { transform: translate(-75px,-55px) rotate(-14deg); }
+  40%  { transform: translate(-95px,38px)  rotate(-6deg); }
+  60%  { transform: translate(-34px,88px)  rotate(7deg); }
+  80%  { transform: translate(48px,48px)   rotate(11deg); }
+  100% { transform: translate(0px,0px)     rotate(-5deg); }
+}
+
+@keyframes bird-orbit-cw-wide {
+  0%   { transform: translate(0px,0px)     rotate(5deg); }
+  20%  { transform: translate(75px,-55px)  rotate(14deg); }
+  40%  { transform: translate(95px,38px)   rotate(6deg); }
+  60%  { transform: translate(34px,88px)   rotate(-7deg); }
+  80%  { transform: translate(-48px,48px)  rotate(-11deg); }
+  100% { transform: translate(0px,0px)     rotate(5deg); }
+}
+
+@keyframes bird-orbit-tall {
+  0%   { transform: translate(0px,0px)     rotate(0deg); }
+  25%  { transform: translate(-52px,-85px) rotate(-10deg); }
+  50%  { transform: translate(0px,-148px)  rotate(0deg); }
+  75%  { transform: translate(52px,-85px)  rotate(10deg); }
+  100% { transform: translate(0px,0px)     rotate(0deg); }
+}
+
+@keyframes bird-orbit-drift-up {
+  0%   { transform: translate(0px,0px)     rotate(0deg); }
+  28%  { transform: translate(-38px,-68px) rotate(-7deg); }
+  58%  { transform: translate(34px,-88px)  rotate(7deg); }
+  100% { transform: translate(0px,0px)     rotate(0deg); }
+}
+
+@keyframes bird-orbit-figure8 {
+  0%   { transform: translate(0px,0px)      rotate(0deg); }
+  12%  { transform: translate(55px,-38px)   rotate(9deg); }
+  25%  { transform: translate(65px,-95px)   rotate(5deg); }
+  38%  { transform: translate(22px,-138px)  rotate(-4deg); }
+  50%  { transform: translate(-22px,-138px) rotate(-9deg); }
+  62%  { transform: translate(-65px,-95px)  rotate(-5deg); }
+  75%  { transform: translate(-55px,-38px)  rotate(-9deg); }
+  88%  { transform: translate(-20px,0px)    rotate(-3deg); }
+  100% { transform: translate(0px,0px)      rotate(0deg); }
+}
+
+/* Wing flutter on SVG during Phase 2 */
+@keyframes bird-wing-flutter {
+  0%, 100% { transform: scaleY(1); }
+  42%       { transform: scaleY(0.60); }
+  50%       { transform: scaleY(0.55); }
+}
 
 /* ─── Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
