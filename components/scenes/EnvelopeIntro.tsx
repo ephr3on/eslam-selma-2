@@ -428,7 +428,7 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
                 alt=""
                 aria-hidden="true"
                 className="block"
-                style={{ width: 80, height: 80, objectFit: "contain" }}
+                style={{ width: 100, height: 100, objectFit: "contain" }}
               />
             </motion.button>
           </motion.div>
