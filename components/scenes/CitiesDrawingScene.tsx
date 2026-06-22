@@ -196,13 +196,16 @@ const STORY_PAIRS = [
   ["والآن، تلاقيا في مساحة بكر", "فما عادا كونين، بل سماء واحدة"],
 ] as const;
 
-const NARR_START = 8200;
-const NARR_CYCLE = 6400;
+// Maps start sliding 1200ms after Selma's hearts begin (5300+1200=6500ms)
+// and take SHIFT_DURATION seconds to settle. STORY_PAIRS appears 150ms after.
+const MAP_SLIDE_START = 7500;
+const SHIFT_DURATION  = 2.9;
+const NARR_START      = 8550;
+const NARR_CYCLE      = 6400;
 
-// How far the maps+meridian-bottom slide down to create space for STORY_PAIRS
-const MAP_SHIFT = "8.5rem";
+// How far the maps+barrier slide down to create space for STORY_PAIRS
+const MAP_SHIFT  = "8.5rem";
 const SHIFT_EASE = [0.22, 1, 0.36, 1] as const;
-const SHIFT_DURATION = 2.5;
 
 export function CitiesDrawingScene() {
   const ref           = useRef<HTMLDivElement>(null);
@@ -334,9 +337,10 @@ export function CitiesDrawingScene() {
     // Phase 1: Eslam → Selma hearts start
     const t1 = setTimeout(() => { phase = 1; lastTs = 0; raf = requestAnimationFrame(frame); }, 2800);
 
-    // Phase 2: first hearts reach Selma (~2800 + 2500 = ~5300ms)
-    // Maps slide down at this moment so space opens up before STORY_PAIRS appears
-    const t2 = setTimeout(() => { phase = 2; setMapsShifted(true); }, 5300);
+    // Phase 2: Selma starts sending hearts back (~5300ms)
+    const t2    = setTimeout(() => { phase = 2; }, 5300);
+    // Maps slide delayed so STORY_PAIRS appears right after they settle
+    const tShift = setTimeout(() => setMapsShifted(true), MAP_SLIDE_START);
 
     const narrativeTimers = STORY_PAIRS.map((_, i) =>
       setTimeout(() => setNarrativeIndex(i), NARR_START + i * NARR_CYCLE)
@@ -349,6 +353,7 @@ export function CitiesDrawingScene() {
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
+      clearTimeout(tShift);
       cancelAnimationFrame(raf);
       narrativeTimers.forEach(clearTimeout);
       clearTimeout(scrollTimer);

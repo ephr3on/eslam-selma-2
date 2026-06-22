@@ -239,12 +239,6 @@ export function MeetingSeal() {
         onClick={() => smoothScrollTo("invitation-card", 2000)}
         aria-label="انتقل إلى بطاقة الدعوة"
       >
-        {/* Label */}
-        <span
-          style={{ color: "#6B5A47" }}
-        >
-          اكتشف الدعوة
-        </span>
 
         {/* Ornamental arrow: diamond + double chevron, bouncing */}
         <motion.div
@@ -280,6 +274,14 @@ export function MeetingSeal() {
             />
           </svg>
         </motion.div>
+
+        {/* Label */}
+        <span
+          style={{ color: "#6B5A47" }}
+        >
+          اكتشف الدعوة
+        </span>
+
       </motion.button>
 
       {/* Floating ornaments at corners */}
