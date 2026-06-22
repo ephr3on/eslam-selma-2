@@ -431,7 +431,7 @@ export function CitiesDrawingScene() {
           {/* Map + name — slides down when mapsShifted */}
           <motion.div
             className="flex flex-col items-center"
-            animate={{ marginTop: mapsShifted ? MAP_SHIFT : "0rem" }}
+            animate={{ marginTop: mapsShifted ? MAP_SHIFT : "1.5rem" }}
             transition={{ duration: SHIFT_DURATION, ease: SHIFT_EASE }}
           >
             <EgyptMap inView={inView} />
@@ -449,7 +449,7 @@ export function CitiesDrawingScene() {
         <div className="flex flex-col items-center pt-28 shrink-0">
           <motion.div
             className="flex flex-col items-center"
-            animate={{ marginTop: mapsShifted ? MAP_SHIFT : "0rem" }}
+            animate={{ marginTop: mapsShifted ? MAP_SHIFT : "1.5rem" }}
             transition={{ duration: SHIFT_DURATION, ease: SHIFT_EASE }}
           >
             {/* Top line */}
@@ -522,7 +522,7 @@ export function CitiesDrawingScene() {
           {/* Map + name — slides down when mapsShifted */}
           <motion.div
             className="flex flex-col items-center"
-            animate={{ marginTop: mapsShifted ? MAP_SHIFT : "0rem" }}
+            animate={{ marginTop: mapsShifted ? MAP_SHIFT : "1.5rem" }}
             transition={{ duration: SHIFT_DURATION, ease: SHIFT_EASE }}
           >
             <TunisiaMap inView={inView} />
