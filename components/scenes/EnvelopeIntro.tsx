@@ -333,7 +333,7 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
             width: "auto",
             transition: "height 3.5s cubic-bezier(0.22, 1, 0.36, 1)",
             filter:
-              "brightness(0) invert(1) sepia(1) saturate(8) hue-rotate(358deg) brightness(0.48) contrast(1.1) " +
+              "brightness(0) invert(1) sepia(100) saturate(1) hue-rotate(2deg) brightness(0.75) " +
               "drop-shadow(0 0 8px rgba(255,255,255,0.95)) " +
               "drop-shadow(0 0 20px rgba(255,255,255,0.65)) " +
               "drop-shadow(0 0 40px rgba(255,255,255,0.35))",
