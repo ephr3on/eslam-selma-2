@@ -236,10 +236,6 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
   const envelopeRef = useRef<HTMLDivElement>(null);
   // Mobile (< 640 px): rise less so the photo stays near the envelope middle
   const [photoY, setPhotoY] = useState(-96);
-  const [logoDimensions, setLogoDimensions] = useState<{ top: string; height: number }>({
-    top: "calc(19.5% - 90px)",
-    height: 200,
-  });
 
   useEffect(() => {
     const update = () => setPhotoY(window.innerWidth < 640 ? -60 : -96);
@@ -267,21 +263,6 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
     setLocalOpen(true);
     onStampClick();
     setPhotoVisible(true);
-
-    // Animate logo to stay centered between page top and the risen photo
-    if (envelopeRef.current) {
-      const envRect = envelopeRef.current.getBoundingClientRect();
-      // Photo bottom (visual) = envelope bottom + photoY (photoY is negative)
-      // Photo height ≈ 84% of envelope width (left/right 8% inset, 1:1 aspect ratio)
-      const photoTopRisen = envRect.bottom + photoY - envRect.width * 0.84;
-      const availableSpace = Math.max(100, photoTopRisen);
-      const logoH = Math.round(availableSpace * 0.62);
-      const logoCenter = availableSpace * 0.58;
-      setLogoDimensions({
-        top: `${Math.max(4, Math.round(logoCenter - logoH / 2))}px`,
-        height: logoH,
-      });
-    }
 
     // Release birds as the flap begins to open
     setTimeout(() => {
@@ -311,36 +292,6 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
       </div>
 
       {/* Calligraphy logo — tracks midpoint between page top and risen photo */}
-      <motion.div
-        className="absolute left-0 right-0 flex justify-center pointer-events-none"
-        style={{
-          top: logoDimensions.top,
-          zIndex: 5,
-          transition: "top 3.5s cubic-bezier(0.22, 1, 0.36, 1)",
-        }}
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        aria-hidden="true"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-calligraphy.png"
-          alt=""
-          aria-hidden="true"
-          style={{
-            height: logoDimensions.height,
-            width: "auto",
-            transition: "height 3.5s cubic-bezier(0.22, 1, 0.36, 1)",
-            filter:
-              "brightness(0) invert(1) sepia(100) saturate(1) hue-rotate(2deg) brightness(0.75) " +
-              "drop-shadow(0 0 8px rgba(255,255,255,0.95)) " +
-              "drop-shadow(0 0 20px rgba(255,255,255,0.65)) " +
-              "drop-shadow(0 0 40px rgba(255,255,255,0.35))",
-          }}
-        />
-      </motion.div>
-
       {/* Top decorative line */}
       <motion.div
         initial={{ scaleX: 0, opacity: 0 }}
