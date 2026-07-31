@@ -36,6 +36,32 @@
   font-style: normal;
   font-display: swap;
 }
+/* Digital Khatt V1 (Old Madina) — main UI font.
+   Covers Arabic letters + Arabic-Indic digits only; Latin digits, Latin
+   letters and punctuation fall through to Amiri/Georgia. */
+@font-face {
+  font-family: "DigitalKhattV1";
+  src: url("/fonts/digital-khatt-v1-ws280.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Digital Khatt V2 — original, for basmala and Quranic verses */
+@font-face {
+  font-family: "DigitalKhatt";
+  src: url("/fonts/digital-khatt-v2.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Digital Khatt V2, patched: space glyph widened from 0.1em to 0.28em */
+@font-face {
+  font-family: "DigitalKhattSpaced";
+  src: url("/fonts/digital-khatt-v2-ws280.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "BaradaRiqa";
   src: url("/fonts/royal-arabic.ttf") format("truetype");
@@ -64,8 +90,8 @@
   --color-smoke:          #8C7B6A;
 
   /* Typography */
-  --font-display:  "YearOfHandicrafts", "Amiri", Georgia, serif;
-  --font-body:     "YearOfHandicrafts", "Tajawal", system-ui, sans-serif;
+  --font-display:  "DigitalKhattV1", "Amiri", Georgia, serif;
+  --font-body:     "DigitalKhattV1", "Tajawal", system-ui, sans-serif;
 
   /* Shadows */
   --shadow-paper: 0 2px 16px 0 rgba(28,18,9,0.08), 0 1px 4px 0 rgba(28,18,9,0.06);
@@ -88,7 +114,7 @@ html {
 body {
   background-color: #FAF7F0;
   color: #1C1209;
-  font-family: "YearOfHandicrafts", "Tajawal", system-ui, sans-serif;
+  font-family: "DigitalKhattV1", "Tajawal", system-ui, sans-serif;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -97,15 +123,27 @@ body {
 
 /* ─── Font Classes ─── */
 .font-display {
-  font-family: "YearOfHandicrafts", "Amiri", Georgia, serif;
+  font-family: "DigitalKhattV1", "Amiri", Georgia, serif;
 }
 
 .font-body {
-  font-family: "YearOfHandicrafts", "Amiri", Georgia, serif;
+  font-family: "DigitalKhattV1", "Amiri", Georgia, serif;
 }
 
 .font-names {
   font-family: "BaradaRiqa", "Amiri", Georgia, serif;
+}
+
+/* Digital Khatt V2 — basmala and Quranic verses (original space width) */
+.font-quran {
+  font-family: "DigitalKhatt", "Amiri", Georgia, serif;
+  font-feature-settings: "liga" 1, "calt" 1, "rlig" 1;
+}
+
+/* Digital Khatt V2 with wider word gaps — for running prose */
+.font-khatt {
+  font-family: "DigitalKhattSpaced", "Amiri", Georgia, serif;
+  font-feature-settings: "liga" 1, "calt" 1, "rlig" 1;
 }
 
 /* ─── Paper Grain Texture via CSS noise ─── */

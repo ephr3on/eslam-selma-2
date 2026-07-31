@@ -11,8 +11,14 @@ export const invitationData = {
   },
   aqdDate: "21 مارس 2026",
   weddingDate: "الجمعة، 11 سبتمبر 2026",
-  weddingTime: "الساعة السابعة مساءً",
+  weddingTime: "الساعة 7:00 مساءً",
   venue: "فندق بوليفارد عُمان",
+  // Compact strings for the icon row on the invitation card
+  eventInfo: {
+    date: { primary: "الجمعة", secondary: "11 سبتمبر" },
+    place: { primary: "فندق", secondary: "بوليفارد عُمان" },
+    time: { primary: "الحضور", secondary: "07:00 م" },
+  },
   showAddress: false,
   mapUrl: "https://maps.app.goo.gl/NNdBrTrAtD2ksFrU8",
   calendarEvent: {
@@ -29,7 +35,7 @@ export const invitationData = {
     "وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
   ],
   quranRef: "الروم: 21",
-  invitation: "يشرفنا ويسعدنا دعوتكم لمشاركتنا فرحة زفافنا، وحضور لحظةٍ نبدأ بها فصلًا جديدًا من حياتنا.",
+  invitation: "يشرفنا ويسعدنا دعوتكم لمشاركتنا فرحة زفافنا، وحضور لحظةٍ نبدأ بها فصلًا جديدًا من حياتنا",
   poeticLines: [
     "من الشرقية في مصر، حيث يبدأ الضوء من الحقول،",
     "إلى سوسة، حيث يلامس البحر أبواب المدينة،",

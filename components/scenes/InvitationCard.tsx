@@ -57,6 +57,70 @@ function CardButton({
   );
 }
 
+const ICON_COLOR = "#8C6D4A";
+
+function CalendarIcon() {
+  return (
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="2.5" stroke={ICON_COLOR} strokeWidth="1.6" />
+      <line x1="3" y1="10" x2="21" y2="10" stroke={ICON_COLOR} strokeWidth="1.6" />
+      <line x1="8" y1="2.8" x2="8" y2="6.5" stroke={ICON_COLOR} strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="16" y1="2.8" x2="16" y2="6.5" stroke={ICON_COLOR} strokeWidth="1.8" strokeLinecap="round" />
+      <g fill={ICON_COLOR}>
+        <rect x="6.5" y="12.5" width="2" height="2" rx="0.4" />
+        <rect x="11" y="12.5" width="2" height="2" rx="0.4" />
+        <rect x="15.5" y="12.5" width="2" height="2" rx="0.4" />
+        <rect x="6.5" y="16.5" width="2" height="2" rx="0.4" />
+        <rect x="11" y="16.5" width="2" height="2" rx="0.4" />
+        <rect x="15.5" y="16.5" width="2" height="2" rx="0.4" />
+      </g>
+    </svg>
+  );
+}
+
+function PinIcon() {
+  return (
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5 0 4.9 6.5 12.5 6.5 12.5S18.5 13.9 18.5 9c0-3.6-2.9-6.5-6.5-6.5Z"
+        fill={ICON_COLOR}
+      />
+      <circle cx="12" cy="9" r="2.6" fill="#F8F2E0" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.2" stroke={ICON_COLOR} strokeWidth="1.6" />
+      <path d="M12 6.6V12l3.6 2.4" stroke={ICON_COLOR} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function InfoColumn({
+  icon,
+  primary,
+  secondary,
+}: {
+  icon: React.ReactNode;
+  primary: string;
+  secondary: string;
+}) {
+  return (
+    <div className="flex min-w-0 flex-col items-center justify-start text-center gap-1.5 px-1.5">
+      {icon}
+      <p className="font-display leading-tight" style={{ color: "#3D2E1E", fontSize: "0.92rem" }}>
+        {primary}
+      </p>
+      <p className="font-display leading-tight" style={{ color: "#8C7B6A", fontSize: "0.8rem" }}>
+        {secondary}
+      </p>
+    </div>
+  );
+}
+
 function CardInner() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-5% 0px" });
@@ -130,8 +194,8 @@ function CardInner() {
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.4, duration: 1 }}
-              className="font-display text-sm"
-              style={{ color: "#B8943F" }}
+              className="font-quran"
+              style={{ color: "#B8943F", fontSize: "1.05rem", lineHeight: "2" }}
             >
               {invitationData.basmala}
             </motion.p>
@@ -144,8 +208,8 @@ function CardInner() {
               initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.6, duration: 0.9 }}
-              className="font-display"
-              style={{ color: "#6B5A47", fontSize: "0.9rem", lineHeight: "2" }}
+              className="font-quran"
+              style={{ color: "#6B5A47", fontSize: "1.05rem", lineHeight: "2" }}
             >
               وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
             </motion.p>
@@ -182,8 +246,8 @@ function CardInner() {
               initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.9, duration: 0.8 }}
-              className="font-body text-sm"
-              style={{ color: "#6B5A47", lineHeight: "1.8" }}
+              className="font-khatt"
+              style={{ color: "#6B5A47", fontSize: "1.05rem", lineHeight: "2" }}
             >
               {invitationData.invitation}
             </motion.p>
@@ -191,49 +255,42 @@ function CardInner() {
             {/* Ornament */}
             <IslamicGeometryLine className="w-full opacity-50" />
 
-            {/* Wedding date — prominent */}
+            {/* Event info row — date · place · time */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 1.1, duration: 0.8 }}
-              className="flex flex-col items-center gap-2"
+              className="flex flex-col items-center gap-2 w-full"
             >
-              <p
-                style={{ color: "#8C7B6A", fontFamily: '"YearOfHandicrafts", serif' }}
-              >
+              <p style={{ color: "#8C7B6A", fontFamily: '"DigitalKhattV1", serif' }}>
                 حفل الزفاف
               </p>
-              <p
-                className="font-display text-2xl"
-                style={{ color: "#1C1209" }}
-              >
-                {invitationData.weddingDate}
-              </p>
-              <p
-                className="font-display text-lg"
-                style={{ color: "#B8943F" }}
-              >
-                {invitationData.weddingTime}
-              </p>
-            </motion.div>
 
-            {/* Venue */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.3, duration: 0.8 }}
-              className="flex flex-col items-center gap-0.5"
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="mb-1">
-                <path d="M7 1C4.79 1 3 2.79 3 5c0 3.5 4 8 4 8s4-4.5 4-8c0-2.21-1.79-4-4-4Z" stroke="#B8943F" strokeWidth="1" fill="none" />
-                <circle cx="7" cy="5" r="1.5" fill="#B8943F" opacity="0.7" />
-              </svg>
-              <p
-                className="font-display text-base"
-                style={{ color: "#3D2E1E" }}
-              >
-                {invitationData.venue}
-              </p>
+              <div className="grid w-full grid-cols-3 items-start pt-1">
+                <InfoColumn
+                  icon={<CalendarIcon />}
+                  primary={invitationData.eventInfo.date.primary}
+                  secondary={invitationData.eventInfo.date.secondary}
+                />
+                <div
+                  className="h-full"
+                  style={{
+                    borderInlineStart: "1px solid rgba(212,185,106,0.45)",
+                    borderInlineEnd: "1px solid rgba(212,185,106,0.45)",
+                  }}
+                >
+                  <InfoColumn
+                    icon={<PinIcon />}
+                    primary={invitationData.eventInfo.place.primary}
+                    secondary={invitationData.eventInfo.place.secondary}
+                  />
+                </div>
+                <InfoColumn
+                  icon={<ClockIcon />}
+                  primary={invitationData.eventInfo.time.primary}
+                  secondary={invitationData.eventInfo.time.secondary}
+                />
+              </div>
             </motion.div>
 
             {/* Divider */}
