@@ -7,7 +7,10 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     title: "حفل زفاف إسلام وسلمى",
-    description: "الجمعة، 11 سبتمبر 2026 • الساعة 07:00 مساءً • فندق بوليفارد عمّان",
+    // Real newlines render inside the content attribute exactly as &#10; does —
+    // React escapes a literal "&#10;" string into "&amp;#10;", which would show
+    // the entity as visible text in the preview.
+    description: "♥︎ الجمعة، 11 سبتمبر 2026\n♥︎ الساعة 07:00 مساءً\n♥︎ فندق بوليفارد عمّان",
     locale: "ar",
     images: ["https://eslam-selma-2.vercel.app/og-image.jpg"],
   },
