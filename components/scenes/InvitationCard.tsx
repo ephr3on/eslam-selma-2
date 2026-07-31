@@ -36,7 +36,7 @@ function CardButton({
 }) {
   const shared = {
     "aria-label": ariaLabel,
-    className: "inline-flex items-center justify-center gap-2 font-body text-sm px-6 py-3 rounded-sm transition-all duration-300 select-none",
+    className: "inline-flex items-center justify-center gap-2 font-handicrafts text-sm px-6 py-3 rounded-sm transition-all duration-300 select-none",
     style: buttonStyle[variant],
     whileHover: {
       scale: 1.02,
@@ -111,10 +111,10 @@ function InfoColumn({
   return (
     <div className="flex min-w-0 flex-col items-center justify-start text-center gap-1.5 px-1.5">
       {icon}
-      <p className="font-display leading-tight" style={{ color: "#3D2E1E", fontSize: "0.92rem" }}>
+      <p className="font-handicrafts leading-tight" style={{ color: "#3D2E1E", fontSize: "0.92rem", fontFamily: "YearOfHandicrafts, Amiri, Georgia, serif"}}>
         {primary}
       </p>
-      <p className="font-display leading-tight" style={{ color: "#8C7B6A", fontSize: "0.8rem" }}>
+      <p className="font-handicrafts leading-tight" style={{ color: "#8C7B6A", fontSize: "0.8rem", fontFamily: "YearOfHandicrafts, Amiri, Georgia, serif" }}>
         {secondary}
       </p>
     </div>
@@ -230,7 +230,7 @@ function CardInner() {
             >
               <p
                 className="font-names gold-shimmer"
-                style={{ fontSize: "2.4rem", lineHeight: "1.2" }}
+                style={{ fontSize: "2.4rem", lineHeight: "1.2", marginBottom: "12px" }}
               >
                 {invitationData.names.ar}
               </p>

@@ -134,6 +134,11 @@ body {
   font-family: "BaradaRiqa", "Amiri", Georgia, serif;
 }
 
+/* Original UI font — event info row and buttons on the invitation card */
+.font-handicrafts {
+  font-family: "YearOfHandicrafts", "Amiri", Georgia, serif;
+}
+
 /* Digital Khatt V2 — basmala and Quranic verses (original space width) */
 .font-quran {
   font-family: "DigitalKhatt", "Amiri", Georgia, serif;
