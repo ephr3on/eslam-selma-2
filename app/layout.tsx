@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: "إسلام و سلمى",
     description: "دعوة زفاف — فندق بوليفارد عمان",
     locale: "ar",
+    images: ["https://eslam-selma-2.vercel.app/og-image.jpg"],
   },
 };
 
