@@ -5,6 +5,12 @@ import { useRef } from "react";
 import { invitationData } from "@/data/invitation";
 import { buildGoogleCalendarUrl, generateICS } from "@/lib/utils";
 import { IslamicGeometryLine } from "@/components/ui/OrnamentalDivider";
+import {
+  FramedCorners,
+  FloralDivider,
+  FlankedHeading,
+  DotRule,
+} from "@/components/ui/Ornaments";
 
 const buttonStyle = {
   primary: {
@@ -36,7 +42,7 @@ function CardButton({
 }) {
   const shared = {
     "aria-label": ariaLabel,
-    className: "inline-flex items-center justify-center gap-2 font-handicrafts text-sm px-6 py-3 rounded-sm transition-all duration-300 select-none",
+    className: "inline-flex flex-1 basis-0 min-w-0 items-center justify-center gap-1.5 font-handicrafts text-xs whitespace-nowrap px-3 py-3 rounded-sm transition-all duration-300 select-none",
     style: buttonStyle[variant],
     whileHover: {
       scale: 1.02,
@@ -187,6 +193,14 @@ function CardInner() {
             style={{ border: "1px solid rgba(212,185,106,0.25)" }}
             aria-hidden="true"
           />
+          {/* Second hairline — a fine double rule */}
+          <div
+            className="absolute rounded-sm pointer-events-none"
+            style={{ inset: "3px", border: "0.5px solid rgba(212,185,106,0.18)" }}
+            aria-hidden="true"
+          />
+          {/* Arabesque corner flourishes */}
+          <FramedCorners size={50} inset={4} />
 
           <div className="relative z-10 px-6 py-5 flex flex-col items-center text-center gap-4">
             {/* Basmala */}
@@ -215,11 +229,7 @@ function CardInner() {
             </motion.p>
 
             {/* Divider before names */}
-            <div
-              className="w-24 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
-              aria-hidden="true"
-            />
+            <FloralDivider className="w-full" />
 
             {/* Names */}
             <motion.div
@@ -234,11 +244,7 @@ function CardInner() {
               >
                 {invitationData.names.ar}
               </p>
-              <div
-                className="w-16 h-px"
-                style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
-                aria-hidden="true"
-              />
+              <DotRule />
             </motion.div>
 
             {/* Invitation text */}
@@ -262,9 +268,11 @@ function CardInner() {
               transition={{ delay: 1.1, duration: 0.8 }}
               className="flex flex-col items-center gap-2 w-full"
             >
-              <p style={{ color: "#8C7B6A", fontFamily: '"DigitalKhattV1", serif' }}>
-                حفل الزفاف
-              </p>
+              <FlankedHeading sprigWidth={30}>
+                <p style={{ color: "#8C7B6A", fontFamily: '"DigitalKhattV1", serif' }}>
+                  حفل الزفاف
+                </p>
+              </FlankedHeading>
 
               <div className="grid w-full grid-cols-3 items-start pt-1">
                 <InfoColumn
@@ -294,18 +302,14 @@ function CardInner() {
             </motion.div>
 
             {/* Divider */}
-            <div
-              className="w-20 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
-              aria-hidden="true"
-            />
+            <FloralDivider className="w-full" />
 
             {/* Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 1.5, duration: 0.8 }}
-              className="flex flex-col items-center gap-3 w-full"
+              className="flex flex-row items-stretch justify-center gap-2 w-full max-w-[290px] mx-auto"
             >
               <CardButton
                 href={invitationData.mapUrl}
