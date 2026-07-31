@@ -228,8 +228,8 @@ function CardInner() {
               وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
             </motion.p>
 
-            {/* Divider before names */}
-            <FloralDivider className="w-full" />
+            {/* Ornament */}
+            <IslamicGeometryLine className="w-full opacity-60" />
 
             {/* Names */}
             <motion.div
@@ -258,8 +258,8 @@ function CardInner() {
               {invitationData.invitation}
             </motion.p>
 
-            {/* Ornament */}
-            <IslamicGeometryLine className="w-full opacity-50" />
+            {/* Divider before names */}
+            <FloralDivider className="w-full" />
 
             {/* Event info row — date · place · time */}
             <motion.div
