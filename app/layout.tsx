@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description: "يسرّنا أن ندعوكم لمشاركتنا فرحة زفافنا — الجمعة ١١ سبتمبر ٢٠٢٦",
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "إسلام و سلمى",
-    description: "دعوة زفاف — فندق بوليفارد عمان",
+    title: "حفل زفاف إسلام وسلمى",
+    description: "الجمعة، 11 سبتمبر 2026 • الساعة 07:00 مساءً • فندق بوليفارد عمّان",
     locale: "ar",
     images: ["https://eslam-selma-2.vercel.app/og-image.jpg"],
   },
