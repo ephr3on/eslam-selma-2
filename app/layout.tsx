@@ -6,16 +6,16 @@ export const metadata: Metadata = {
   description: "يسرّنا أن ندعوكم لمشاركتنا فرحة زفافنا — الجمعة ١١ سبتمبر ٢٠٢٦",
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "♥︎ دعوة حفل زفاف إسلام وسلمى ♥︎",
+    title: "❉ دعوة حفل زفاف إسلام وسلمى ❉",
     // Real newlines render inside the content attribute exactly as &#10; does —
     // React escapes a literal "&#10;" string into "&amp;#10;", which would show
     // the entity as visible text in the preview.
     // ⁧ / ⁩ are RTL isolate marks; they keep ﴿ ﴾ on the correct
     // sides of the verse regardless of the surrounding text direction.
     description:
-      "⌗  الجمعة، 11 سبتمبر 2026\n" +
-      "◷  الساعة 07:00 مساءً\n" +
-      "⌖  فندق بوليفارد عُمان\n",
+      "♥︎ الجمعة، 11 سبتمبر 2026\n" +
+      "♥︎ الساعة 07:00 مساءً\n" +
+      "♥︎ فندق بوليفارد عُمان\n",
     locale: "ar",
     images: ["https://eslam-selma-2.vercel.app/og-image.jpg"],
   },
