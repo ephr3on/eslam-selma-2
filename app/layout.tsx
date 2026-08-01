@@ -15,8 +15,7 @@ export const metadata: Metadata = {
     description:
       "♥︎ الجمعة، 11 سبتمبر 2026\n" +
       "♥︎ الساعة 07:00 مساءً\n" +
-      "♥︎ فندق بوليفارد عُمان\n" +
-      "❉ بكم تكتمل فرحتنا ❉",
+      "♥︎ فندق بوليفارد عُمان",
     locale: "ar",
     images: ["https://eslam-selma-2.vercel.app/og-image.jpg"],
   },
