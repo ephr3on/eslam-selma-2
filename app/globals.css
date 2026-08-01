@@ -62,6 +62,14 @@
   font-style: normal;
   font-display: swap;
 }
+/* KFGQPC Nastaleeq — parents' names on the invitation card only */
+@font-face {
+  font-family: "KFGQPCNastaleeq";
+  src: url("/fonts/kfgqpc-nastaleeq.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "BaradaRiqa";
   src: url("/fonts/royal-arabic.ttf") format("truetype");
@@ -132,6 +140,12 @@ body {
 
 .font-names {
   font-family: "BaradaRiqa", "Amiri", Georgia, serif;
+}
+
+/* Nastaleeq — parents' names */
+.font-nastaleeq {
+  font-family: "KFGQPCNastaleeq", "Amiri", Georgia, serif;
+  font-feature-settings: "liga" 1, "calt" 1, "rlig" 1;
 }
 
 /* ─── Envelope surface treatments ─── */

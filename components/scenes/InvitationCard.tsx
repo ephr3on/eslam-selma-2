@@ -260,23 +260,22 @@ function CardInner() {
                 }}
               >
                 <p
-                  className="font-khatt"
+                  className="font-nastaleeq"
                   style={{
                     color: "#3D2E1E",
-                    fontSize: "clamp(0.95rem, 4vw, 1.15rem)",
-                    lineHeight: "1.8",
-                    fontWeight: 500,
+                    fontSize: "clamp(1.1rem, 4.8vw, 1.35rem)",
+                    lineHeight: "1.9",
                     whiteSpace: "nowrap",
                   }}
                 >
                   {invitationData.cardText.hosts.right}
                 </p>
                 <span
-                  className="font-khatt"
+                  className="font-nastaleeq"
                   style={{
                     color: "#B8943F",
-                    fontSize: "0.95rem",
-                    lineHeight: "1.8",
+                    fontSize: "clamp(1.1rem, 4.8vw, 1.35rem)",
+                    lineHeight: "1.9",
                     opacity: 0.85,
                   }}
                   aria-hidden="true"
@@ -284,12 +283,11 @@ function CardInner() {
                   {invitationData.cardText.hosts.separator}
                 </span>
                 <p
-                  className="font-khatt"
+                  className="font-nastaleeq"
                   style={{
                     color: "#3D2E1E",
-                    fontSize: "clamp(0.95rem, 4vw, 1.15rem)",
-                    lineHeight: "1.8",
-                    fontWeight: 500,
+                    fontSize: "clamp(1.1rem, 4.8vw, 1.35rem)",
+                    lineHeight: "1.9",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -356,6 +354,7 @@ function CardInner() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 1.1, duration: 0.8 }}
               className="flex flex-col items-center gap-2 w-full"
+              style={{ marginTop: "-0.6rem" }}
             >
               <FlankedHeading sprigWidth={30}>
                 <p style={{ color: "#8C7B6A", fontFamily: '"DigitalKhattV1", serif' }}>
@@ -391,7 +390,7 @@ function CardInner() {
             </motion.div>
 
             {/* Ornament */}
-            <IslamicGeometryLine className="w-full opacity-60" />
+            <IslamicGeometryLine className="w-full opacity-60 -mt-2.5 -mb-2.5" />
 
             {/* Buttons */}
             <motion.div
