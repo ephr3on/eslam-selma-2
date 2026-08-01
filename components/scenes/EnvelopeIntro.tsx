@@ -175,8 +175,29 @@ function EnvelopeBack() {
       className="absolute inset-0 w-full h-full"
       aria-hidden="true"
     >
-      <rect x="2" y="2" width="316" height="216" rx="4" fill="#F2E8D0" stroke="#D4B96A" strokeWidth="1" />
-      <g opacity="0.2" stroke="#B8943F" strokeWidth="0.5">
+      <defs>
+        {/* Paper: lighter at the centre, warmer toward the edges */}
+        <radialGradient id="env-paper" cx="50%" cy="42%" r="72%">
+          <stop offset="0%" stopColor="#FBF6E8" />
+          <stop offset="58%" stopColor="#F4EAD3" />
+          <stop offset="100%" stopColor="#EBDFC0" />
+        </radialGradient>
+        {/* Lining: the page's rhombus motif, reduced to its quietest form */}
+        <pattern id="env-lining" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M20 2 L38 20 L20 38 L2 20 Z" stroke="#B8943F" strokeWidth="0.4" fill="none" />
+          <circle cx="20" cy="20" r="3.2" stroke="#B8943F" strokeWidth="0.35" fill="none" />
+        </pattern>
+      </defs>
+
+      <rect x="2" y="2" width="316" height="216" rx="4" fill="url(#env-paper)" stroke="#C9AE72" strokeWidth="0.75" />
+
+      {/* Inner lining — only reads once the flap lifts */}
+      <rect x="2.5" y="2.5" width="315" height="215" rx="4" fill="url(#env-lining)" opacity="0.07" />
+
+      {/* Soft highlight along the top inner edge */}
+      <path d="M6 3.6 L314 3.6" stroke="#FFFDF6" strokeWidth="0.8" opacity="0.55" strokeLinecap="round" />
+
+      <g opacity="0.16" stroke="#B8943F" strokeWidth="0.45">
         <rect x="20" y="20" width="280" height="180" rx="2" fill="none" />
         <rect x="30" y="30" width="260" height="160" rx="1" fill="none" strokeDasharray="4 4" />
         <path d="M160 60 L166 74 L181 74 L169 83 L174 97 L160 88 L146 97 L151 83 L139 74 L154 74 Z" fill="none" />
@@ -202,11 +223,12 @@ function EnvelopeFlap({ isOpen }: { isOpen: boolean }) {
           d: isOpen ? "M2 2 L160 -80 L318 2 Z" : "M2 2 L160 110 L318 2 Z",
           fill: isOpen ? "#F8F3E6" : "#EDE3CA",
         }}
-        stroke="#D4B96A"
-        strokeWidth="1"
+        stroke="#C9AE72"
+        strokeWidth="0.75"
+        strokeLinejoin="round"
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       />
-      <line x1="2" y1="2" x2="318" y2="2" stroke="#D4B96A" strokeWidth="1" opacity="0.6" />
+      <line x1="2" y1="2" x2="318" y2="2" stroke="#C9AE72" strokeWidth="0.75" opacity="0.55" />
     </svg>
   );
 }
@@ -220,11 +242,39 @@ function EnvelopeFolds() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="absolute inset-0 w-full h-full"
+      style={{ pointerEvents: "none" }}
       aria-hidden="true"
     >
-      <path d="M2 2 L2 218 L160 130 Z" fill="#E6D5AF" stroke="#D4B96A" strokeWidth="0.5" />
-      <path d="M318 2 L318 218 L160 130 Z" fill="#E8D8B5" stroke="#D4B96A" strokeWidth="0.5" />
-      <path d="M2 218 L160 130 L318 218 Z" fill="#EBE0C4" stroke="#D4B96A" strokeWidth="0.5" />
+      <defs>
+        {/* Each fold catches the light differently, so the construction reads */}
+        <linearGradient id="env-fold-l" x1="0" y1="0" x2="1" y2="0.2">
+          <stop offset="0%" stopColor="#EFE4C9" />
+          <stop offset="100%" stopColor="#E4D3AC" />
+        </linearGradient>
+        <linearGradient id="env-fold-r" x1="1" y1="0" x2="0" y2="0.2">
+          <stop offset="0%" stopColor="#F1E7CE" />
+          <stop offset="100%" stopColor="#E6D6B1" />
+        </linearGradient>
+        <linearGradient id="env-fold-b" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stopColor="#F3EAD5" />
+          <stop offset="100%" stopColor="#E9DEC0" />
+        </linearGradient>
+      </defs>
+
+      <path d="M2 2 L2 218 L160 130 Z" fill="url(#env-fold-l)" stroke="#C9AE72" strokeWidth="0.4" strokeLinejoin="round" />
+      <path d="M318 2 L318 218 L160 130 Z" fill="url(#env-fold-r)" stroke="#C9AE72" strokeWidth="0.4" strokeLinejoin="round" />
+      <path d="M2 218 L160 130 L318 218 Z" fill="url(#env-fold-b)" stroke="#C9AE72" strokeWidth="0.4" strokeLinejoin="round" />
+
+      {/* Contact shadows where the folds meet — same seams, no new geometry */}
+      <g fill="none" stroke="rgba(138,110,60,0.10)" strokeWidth="1.6" strokeLinecap="round">
+        <path d="M2 218 L160 130" />
+        <path d="M318 218 L160 130" />
+      </g>
+      {/* Hairline highlight on the upper folded edges */}
+      <g fill="none" stroke="rgba(255,253,246,0.45)" strokeWidth="0.6" strokeLinecap="round">
+        <path d="M3.2 4 L158 129" />
+        <path d="M316.8 4 L162 129" />
+      </g>
     </svg>
   );
 }
@@ -312,10 +362,23 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
           <motion.div
             ref={envelopeRef}
             className="relative w-72 h-48 sm:w-80 sm:h-52 md:w-96 md:h-64"
-            style={{ filter: "drop-shadow(0 8px 24px rgba(28,18,9,0.12))", willChange: "filter" }}
           >
-            {/* Layer 1 – parchment back */}
-            <div className="absolute inset-0" style={{ zIndex: 1 }}>
+            {/* Layer 1 – parchment back.
+                The drop-shadow lives here rather than on the wrapper: the
+                wrapper's subtree grows enormously once the flap flips past
+                the top edge (overflow:visible) and the photo rises out of
+                the box, which re-scopes the filter region and makes the
+                shadow drift out of view. Cast from the static, opaque body
+                instead, it stays put through the whole opening sequence. */}
+            <div
+              className="absolute inset-0 envelope-paper"
+              style={{
+                zIndex: 1,
+                filter:
+                  "drop-shadow(0 1px 1px rgba(28,18,9,0.06)) drop-shadow(0 6px 12px rgba(28,18,9,0.07)) drop-shadow(0 18px 34px rgba(28,18,9,0.09))",
+                willChange: "filter",
+              }}
+            >
               <EnvelopeBack />
             </div>
 
@@ -411,7 +474,7 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
             transition={stampClicked ? { duration: 0.35 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
             <motion.button
-              className="focus:outline-none cursor-pointer block"
+              className="focus:outline-none cursor-pointer block wax-seal"
               whileHover={{ scale: 1.1, transition: { duration: 0.2, ease: "easeOut" } }}
               whileTap={{ scale: 0.9, transition: { duration: 0.1, ease: "easeOut" } }}
               onClick={handleStampTap}
@@ -423,7 +486,13 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
                 alt=""
                 aria-hidden="true"
                 className="block"
-                style={{ width: 100, height: 100, objectFit: "contain" }}
+                style={{
+                  width: 100,
+                  height: 100,
+                  objectFit: "contain",
+                  filter:
+                    "drop-shadow(0 1px 1px rgba(28,18,9,0.18)) drop-shadow(0 5px 9px rgba(28,18,9,0.16))",
+                }}
               />
             </motion.button>
           </motion.div>

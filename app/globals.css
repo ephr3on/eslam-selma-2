@@ -134,6 +134,44 @@ body {
   font-family: "BaradaRiqa", "Amiri", Georgia, serif;
 }
 
+/* ─── Envelope surface treatments ─── */
+
+/* Barely-there paper grain on the envelope back. Lives inside the back
+   layer's own stacking context, so it can never rise above the flap,
+   the photo or the seal. */
+.envelope-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23p)' opacity='0.022'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Warm reflection pooling under the wax seal, so it sits on the paper
+   rather than floating above it. Painted behind the seal image. */
+.wax-seal {
+  position: relative;
+}
+
+.wax-seal::before {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgba(184, 148, 63, 0.16),
+    rgba(184, 148, 63, 0.06) 62%,
+    transparent 78%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
 /* Original UI font — event info row and buttons on the invitation card */
 .font-handicrafts {
   font-family: "YearOfHandicrafts", "Amiri", Georgia, serif;
