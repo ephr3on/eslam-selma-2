@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     // ⁧ / ⁩ are RTL isolate marks; they keep ﴿ ﴾ on the correct
     // sides of the verse regardless of the surrounding text direction.
     description:
-      "🗓️ الجمعة، 11 سبتمبر 2026\n" +
-      "🕖 الساعة 07:00 مساءً\n" +
-      "📍 فندق بوليفارد عُمان\n",
+      "⌗  الجمعة، 11 سبتمبر 2026\n" +
+      "◷  الساعة 07:00 مساءً\n" +
+      "⌖  فندق بوليفارد عُمان\n",
     locale: "ar",
     images: ["https://eslam-selma-2.vercel.app/og-image.jpg"],
   },
