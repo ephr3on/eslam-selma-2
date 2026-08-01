@@ -44,7 +44,7 @@ export const invitationData = {
       separator: "و",
       left: "د. الأزهر خريجي",
     },
-    invitationLine: "بدعوتكم لمشاركتنا حفل زفافنا",
+    invitationLine: "بدعوتكم لمشاركتنا فرحتنا بحفل زفافنا",
     couple: "إسلام و سلمى",
     closing: "وحضور لحظة نبدأ بها فصلًا جديدًا من حياتنا",
   },

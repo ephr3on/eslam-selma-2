@@ -237,10 +237,9 @@ function CardInner() {
                 transition={{ delay: 0.75, duration: 0.8 }}
                 className="font-khatt"
                 style={{
-                  color: "#8C7B6A",
-                  fontSize: "0.9rem",
+                  color: "#6B5A47",
+                  fontSize: "0.98rem",
                   lineHeight: "1.9",
-                  letterSpacing: "0.02em",
                 }}
               >
                 {invitationData.cardText.intro}
