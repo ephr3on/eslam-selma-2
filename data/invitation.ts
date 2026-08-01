@@ -45,7 +45,7 @@ export const invitationData = {
       left: "د. الأزهر خريجي",
     },
     invitationLine: "بدعوتكم لمشاركتنا حفل زفافنا",
-    couple: "إسلام وسلمى",
+    couple: "إسلام و سلمى",
     closing: "وحضور لحظة نبدأ بها فصلًا جديدًا من حياتنا",
   },
   poeticLines: [

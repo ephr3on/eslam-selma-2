@@ -390,8 +390,6 @@ function CardInner() {
               </div>
             </motion.div>
 
-            {/* Ornament */}
-            <IslamicGeometryLine className="w-full opacity-60" />
 
             {/* Buttons */}
             <motion.div
