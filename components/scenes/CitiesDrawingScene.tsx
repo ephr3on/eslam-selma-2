@@ -561,14 +561,24 @@ export function CitiesDrawingScene() {
                   return (
                     <motion.p
                       key={li}
-                      className="font-display text-xl md:text-2xl overflow-hidden"
+                      className="font-display text-xl md:text-2xl"
                       style={{
                         color: isFinal ? "#1C1209" : "#3D2E1E",
                         lineHeight: "2.3",
                         letterSpacing: isFinal ? "0.01em" : undefined,
+                        // Arabic glyphs overhang their advance width; without
+                        // this breathing room the box edge shaves the first
+                        // letter (the rightmost one in RTL).
+                        paddingInline: "0.35em",
                       }}
                       initial={{ clipPath: "inset(0 0 0 100%)" }}
-                      animate={{ clipPath: "inset(0 0 0 0%)" }}
+                      // Once the wipe finishes, drop the clip entirely: even at
+                      // 0% the inset() boundary still rasterises against the
+                      // glyph edges and shaves Arabic letterforms.
+                      animate={{
+                        clipPath: "inset(0 0 0 0%)",
+                        transitionEnd: { clipPath: "none" },
+                      }}
                       transition={{
                         duration: isFinal ? 4.0 : 2.6,
                         delay: li * 0.85,
