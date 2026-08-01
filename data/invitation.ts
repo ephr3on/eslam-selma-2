@@ -36,6 +36,18 @@ export const invitationData = {
   ],
   quranRef: "الروم: 21",
   invitation: "يشرفنا ويسعدنا دعوتكم لمشاركتنا فرحة زفافنا وحضور لحظةٍ نبدأ بها فصلًا جديدًا من حياتنا",
+  // Main text block on the invitation card
+  cardText: {
+    intro: "بكل الود يتشرف",
+    hosts: {
+      right: "د. يوسف شريف",
+      separator: "و",
+      left: "د. الأزهر خريجي",
+    },
+    invitationLine: "بدعوتكم لمشاركتنا حفل زفافنا",
+    couple: "إسلام وسلمى",
+    closing: "وحضور لحظة نبدأ بها فصلًا جديدًا من حياتنا",
+  },
   poeticLines: [
     "من الشرقية في مصر، حيث يبدأ الضوء من الحقول،",
     "إلى سوسة، حيث يلامس البحر أبواب المدينة،",

@@ -214,9 +214,6 @@ function CardInner() {
               {invitationData.basmala}
             </motion.p>
 
-            {/* Ornament */}
-            <IslamicGeometryLine className="w-full opacity-60" />
-
             {/* Quran closing */}
             <motion.p
               initial={{ opacity: 0, y: 8 }}
@@ -228,35 +225,127 @@ function CardInner() {
               وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
             </motion.p>
 
-            {/* Ornament */}
-            <IslamicGeometryLine className="w-full opacity-60" />
+            {/* Divider */}
+            <FloralDivider className="w-full" />
 
-            {/* Names */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.8, duration: 0.8, type: "spring", stiffness: 200 }}
-              className="flex flex-col items-center gap-1"
-            >
-              <p
-                className="font-names gold-shimmer"
-                style={{ fontSize: "2.4rem", lineHeight: "1.2", marginBottom: "12px" }}
+            {/* ── Main text block ── */}
+            <div className="flex w-full flex-col items-center text-center">
+              {/* 1 · Intro line */}
+              <motion.p
+                initial={{ opacity: 0, y: 6 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.75, duration: 0.8 }}
+                className="font-khatt"
+                style={{
+                  color: "#8C7B6A",
+                  fontSize: "0.9rem",
+                  lineHeight: "1.9",
+                  letterSpacing: "0.02em",
+                }}
               >
-                {invitationData.names.ar}
-              </p>
-              <DotRule />
-            </motion.div>
+                {invitationData.cardText.intro}
+              </motion.p>
 
-            {/* Invitation text */}
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.9, duration: 0.8 }}
-              className="font-khatt"
-              style={{ color: "#6B5A47", fontSize: "1.05rem", lineHeight: "2" }}
-            >
-              {invitationData.invitation}
-            </motion.p>
+              {/* 2 · Hosts — balanced right / و / left composition */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.85, duration: 0.8 }}
+                dir="rtl"
+                className="grid w-full items-center"
+                style={{
+                  gridTemplateColumns: "1fr auto 1fr",
+                  columnGap: "0.5rem",
+                  marginTop: "0.75rem",
+                }}
+              >
+                <p
+                  className="font-khatt"
+                  style={{
+                    color: "#3D2E1E",
+                    fontSize: "clamp(0.95rem, 4vw, 1.15rem)",
+                    lineHeight: "1.8",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {invitationData.cardText.hosts.right}
+                </p>
+                <span
+                  className="font-khatt"
+                  style={{
+                    color: "#B8943F",
+                    fontSize: "0.95rem",
+                    lineHeight: "1.8",
+                    opacity: 0.85,
+                  }}
+                  aria-hidden="true"
+                >
+                  {invitationData.cardText.hosts.separator}
+                </span>
+                <p
+                  className="font-khatt"
+                  style={{
+                    color: "#3D2E1E",
+                    fontSize: "clamp(0.95rem, 4vw, 1.15rem)",
+                    lineHeight: "1.8",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {invitationData.cardText.hosts.left}
+                </p>
+              </motion.div>
+
+              {/* 3 · Invitation line */}
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.95, duration: 0.8 }}
+                className="font-khatt"
+                style={{
+                  color: "#6B5A47",
+                  fontSize: "0.98rem",
+                  lineHeight: "1.9",
+                  marginTop: "0.9rem",
+                }}
+              >
+                {invitationData.cardText.invitationLine}
+              </motion.p>
+
+              {/* 4 · Couple names — focal point */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ delay: 1.05, duration: 0.8, type: "spring", stiffness: 200 }}
+                className="flex flex-col items-center"
+                style={{ marginTop: "1.15rem" }}
+              >
+                <p
+                  className="font-names gold-shimmer"
+                  style={{ fontSize: "2.6rem", lineHeight: "1.25" }}
+                >
+                  {invitationData.cardText.couple}
+                </p>
+              </motion.div>
+
+              {/* 5 · Closing line */}
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 1.15, duration: 0.8 }}
+                className="font-khatt mx-auto"
+                style={{
+                  color: "#6B5A47",
+                  fontSize: "0.98rem",
+                  lineHeight: "2",
+                  marginTop: "1.1rem",
+                  maxWidth: "30ch",
+                }}
+              >
+                {invitationData.cardText.closing}
+              </motion.p>
+            </div>
 
             {/* Divider before names */}
             <FloralDivider className="w-full" />
@@ -301,8 +390,8 @@ function CardInner() {
               </div>
             </motion.div>
 
-            {/* Divider */}
-            <FloralDivider className="w-full" />
+            {/* Ornament */}
+            <IslamicGeometryLine className="w-full opacity-60" />
 
             {/* Buttons */}
             <motion.div
