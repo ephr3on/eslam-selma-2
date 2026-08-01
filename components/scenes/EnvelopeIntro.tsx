@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { GoldParticles } from "@/components/ui/GoldParticles";
+import { PageFrame } from "@/components/ui/PageFrame";
 import { invitationData } from "@/data/invitation";
 
 // ─── Bird Animation System ──────────────────────────────────────────────────
@@ -291,16 +292,8 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
         </svg>
       </div>
 
-      {/* Calligraphy logo — tracks midpoint between page top and risen photo */}
-      {/* Top decorative line */}
-      <motion.div
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: 1, opacity: 1 }}
-        transition={{ duration: 1.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute top-8 left-8 right-8 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
-        aria-hidden="true"
-      />
+      {/* Ornamental frame — corner knots, vesica marks, hairline edges */}
+      <PageFrame />
 
       {/* Envelope + stamp */}
       <motion.div
@@ -468,31 +461,6 @@ export function EnvelopeIntro({ onStampClick, isTransitioning }: EnvelopeIntroPr
         </AnimatePresence>
       </motion.div>
 
-      {/* Bottom decorative line */}
-      <motion.div
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: 1, opacity: 1 }}
-        transition={{ duration: 1.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute bottom-8 left-8 right-8 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, #D4B96A, transparent)" }}
-        aria-hidden="true"
-      />
-
-      {/* Corner ornaments */}
-      {["top-6 right-6 rotate-0", "top-6 left-6 rotate-90", "bottom-6 left-6 rotate-180", "bottom-6 right-6 -rotate-90"].map((pos, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.4, scale: 1 }}
-          transition={{ delay: 0.8 + i * 0.1, duration: 0.6 }}
-          className={`absolute ${pos}`}
-          aria-hidden="true"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M2 2 L10 2 L2 10" stroke="#B8943F" strokeWidth="1" strokeLinecap="round" />
-          </svg>
-        </motion.div>
-      ))}
     </section>
   );
 }

@@ -7,6 +7,67 @@ import { GoldParticles } from "@/components/ui/GoldParticles";
 import { FloatingOrnament } from "@/components/ui/FloatingOrnament";
 import { invitationData } from "@/data/invitation";
 
+/* ────────────────────────────────────────────────────────────────
+   Seal geometry — every coordinate is derived, never hand-placed.
+   Centre is (100, 100); angles start at 12 o'clock and run clockwise.
+   ──────────────────────────────────────────────────────────────── */
+const C = 100;
+
+/** Point on a circle of radius r at `deg` degrees from 12 o'clock. */
+function polar(r: number, deg: number): [number, number] {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return [C + r * Math.cos(a), C + r * Math.sin(a)];
+}
+
+/**
+ * Closed star polygon with `points` arms, alternating outer/inner radii.
+ * Equal arm lengths and equal angular spacing by construction.
+ */
+function starPath(points: number, outerR: number, innerR: number, rotation = 0) {
+  const step = 360 / (points * 2);
+  return (
+    Array.from({ length: points * 2 }, (_, i) => {
+      const [x, y] = polar(i % 2 === 0 ? outerR : innerR, rotation + i * step);
+      return `${i === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+    }).join(" ") + " Z"
+  );
+}
+
+/* Ratio for a true {8/3} star polygon — the classic Islamic khātim.
+   cos(3π/8) / cos(2π/8) ≈ 0.5412 */
+const STAR_RATIO = Math.cos((3 * Math.PI) / 8) / Math.cos((2 * Math.PI) / 8);
+
+/* Concentric rings, 12 units apart */
+const RING_OUTER = 94;
+const RING_MID = 82;
+const RING_INNER = 70;
+
+/* Star arms end exactly on RING_INNER; their valleys define the core disc */
+const STAR_OUTER = RING_INNER;
+const STAR_INNER = STAR_OUTER * STAR_RATIO; // ≈ 37.88 — also the core radius
+
+const STAR_A = starPath(8, STAR_OUTER, STAR_INNER, 0);
+const STAR_B = starPath(8, STAR_OUTER, STAR_INNER, 22.5);
+const STAR_CORE = starPath(8, 19, 19 * STAR_RATIO, 22.5);
+
+/* 16 tick marks in the band between RING_INNER and RING_MID */
+const TICKS = Array.from({ length: 16 }, (_, i) => i * 22.5);
+const TICK_FROM = 73;
+const TICK_TO = 79;
+
+/* 8 dots in the band between RING_MID and RING_OUTER */
+const DOTS = Array.from({ length: 8 }, (_, i) => i * 45);
+const DOT_R = 88;
+
+/* Rotation pivot for the spinning groups — the exact centre of the
+   viewBox. `transformBox: view-box` makes the origin resolve against
+   the SVG's own coordinate system rather than each element's bbox,
+   which is what keeps the spin from wobbling. */
+const SPIN_ORIGIN: React.CSSProperties = {
+  transformOrigin: `${C}px ${C}px`,
+  transformBox: "view-box",
+};
+
 function IslamicSeal() {
   const ref = useRef<SVGSVGElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
@@ -17,12 +78,12 @@ function IslamicSeal() {
       viewBox="0 0 200 200"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-48 h-48 md:w-56 md:h-56"
+      className="w-48 h-48 md:w-56 md:h-56 -translate-y-2"
       aria-hidden="true"
     >
-      {/* Outer ring */}
+      {/* Ring 1 — outermost hairline */}
       <motion.circle
-        cx="100" cy="100" r="95"
+        cx={C} cy={C} r={RING_OUTER}
         stroke="#D4B96A"
         strokeWidth="0.5"
         initial={{ pathLength: 0, opacity: 0 }}
@@ -30,9 +91,9 @@ function IslamicSeal() {
         transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      {/* Second ring */}
+      {/* Ring 2 — the anchor line of the composition */}
       <motion.circle
-        cx="100" cy="100" r="85"
+        cx={C} cy={C} r={RING_MID}
         stroke="#B8943F"
         strokeWidth="0.8"
         initial={{ pathLength: 0, opacity: 0 }}
@@ -40,9 +101,9 @@ function IslamicSeal() {
         transition={{ duration: 1.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      {/* Third ring */}
+      {/* Ring 3 — dashed; the star's arms land exactly on it */}
       <motion.circle
-        cx="100" cy="100" r="74"
+        cx={C} cy={C} r={RING_INNER}
         stroke="#D4B96A"
         strokeWidth="0.4"
         strokeDasharray="3 5"
@@ -51,31 +112,46 @@ function IslamicSeal() {
         transition={{ duration: 1.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      {/* Islamic 8-point star — proper geometric construction */}
-      <motion.path
-        d="M100 25 L110 68 L150 55 L125 88 L168 88 L132 100 L168 112 L125 112 L150 145 L110 132 L100 175 L90 132 L50 145 L75 112 L32 112 L68 100 L32 88 L75 88 L50 55 L90 68 Z"
-        stroke="#C9A84C"
-        strokeWidth="0.9"
-        fill="rgba(212,185,106,0.04)"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 0.55 } : {}}
-        transition={{ duration: 2.5, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      />
+      {/* Star A — {8/3} khātim, point at 12 o'clock. Rotates clockwise. */}
+      <motion.g
+        style={SPIN_ORIGIN}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 48, repeat: Infinity, ease: "linear" }}
+      >
+        <motion.path
+          d={STAR_A}
+          stroke="#C9A84C"
+          strokeWidth="0.9"
+          fill="rgba(212,185,106,0.04)"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={inView ? { pathLength: 1, opacity: 0.55 } : {}}
+          transition={{ duration: 2.5, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </motion.g>
 
-      {/* Inner 8-point star (rotated 22.5°) */}
-      <motion.path
-        d="M100 40 L106 70 L130 58 L116 80 L146 80 L124 95 L140 115 L115 106 L108 136 L100 108 L92 136 L85 106 L60 115 L76 95 L54 80 L84 80 L70 58 L94 70 Z"
-        stroke="#B8943F"
-        strokeWidth="0.6"
-        fill="none"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 0.3 } : {}}
-        transition={{ duration: 2, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      />
+      {/* Star B — same star rotated 22.5°, forming a 16-fold rosette.
+          Counter-rotates, so the two layers weave through each other. */}
+      <motion.g
+        style={SPIN_ORIGIN}
+        animate={{ rotate: -360 }}
+        transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+      >
+        <motion.path
+          d={STAR_B}
+          stroke="#B8943F"
+          strokeWidth="0.45"
+          fill="none"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={inView ? { pathLength: 1, opacity: 0.2 } : {}}
+          transition={{ duration: 2, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </motion.g>
 
-      {/* Inner circle */}
+      {/* Core disc — its edge passes through every star valley */}
       <motion.circle
-        cx="100" cy="100" r="52"
+        cx={C} cy={C} r={STAR_INNER}
         stroke="#B8943F"
         strokeWidth="0.8"
         fill="rgba(250,247,240,0.6)"
@@ -84,26 +160,68 @@ function IslamicSeal() {
         transition={{ duration: 0.8, delay: 0.8, type: "spring", stiffness: 200 }}
       />
 
-      {/* Compass needle marks */}
-      {[0, 45, 90, 135].map((angle, i) => (
-        <motion.line
-          key={i}
-          x1={100 + 60 * Math.cos((angle * Math.PI) / 180)}
-          y1={100 + 60 * Math.sin((angle * Math.PI) / 180)}
-          x2={100 + 70 * Math.cos((angle * Math.PI) / 180)}
-          y2={100 + 70 * Math.sin((angle * Math.PI) / 180)}
-          stroke="#D4B96A"
-          strokeWidth="1"
-          strokeLinecap="round"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 0.5 } : {}}
-          transition={{ delay: 1.2 + i * 0.1, duration: 0.4 }}
+      {/* Centre rosette — same counter-rotation as Star B, so the two
+          read as one layer turning against the khātim. */}
+      <motion.g
+        style={SPIN_ORIGIN}
+        animate={{ rotate: -360 }}
+        transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
+      >
+        <motion.path
+          d={STAR_CORE}
+          stroke="#B8943F"
+          strokeWidth="0.6"
+          fill="none"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={inView ? { pathLength: 1, opacity: 0.4 } : {}}
+          transition={{ duration: 1.6, delay: 1.1, ease: [0.22, 1, 0.36, 1] }}
         />
-      ))}
-
-      {/* Glow pulse overlay */}
+      </motion.g>
       <motion.circle
-        cx="100" cy="100" r="52"
+        cx={C} cy={C} r="3"
+        fill="#B8943F"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={inView ? { scale: 1, opacity: 0.55 } : {}}
+        transition={{ duration: 0.6, delay: 1.4 }}
+      />
+
+      {/* 16 radial ticks, one every 22.5° */}
+      {TICKS.map((angle, i) => {
+        const [x1, y1] = polar(TICK_FROM, angle);
+        const [x2, y2] = polar(TICK_TO, angle);
+        return (
+          <motion.line
+            key={angle}
+            x1={x1} y1={y1} x2={x2} y2={y2}
+            stroke="#D4B96A"
+            strokeWidth={i % 2 === 0 ? 1 : 0.6}
+            strokeLinecap="round"
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: i % 2 === 0 ? 0.5 : 0.3 } : {}}
+            transition={{ delay: 1.2 + i * 0.03, duration: 0.4 }}
+          />
+        );
+      })}
+
+      {/* 8 dots on the outer band, aligned with the star's arms */}
+      {DOTS.map((angle, i) => {
+        const [x, y] = polar(DOT_R, angle);
+        return (
+          <motion.circle
+            key={angle}
+            cx={x} cy={y} r="1.4"
+            fill="#B8943F"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={inView ? { scale: 1, opacity: 0.45 } : {}}
+            transition={{ delay: 1.5 + i * 0.05, duration: 0.4 }}
+          />
+        );
+      })}
+
+      {/* Glow pulse on the core */}
+      <motion.circle
+        cx={C} cy={C} r={STAR_INNER}
         fill="none"
         stroke="#ECD99A"
         strokeWidth="1"
