@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { invitationData } from "@/data/invitation";
 import { buildGoogleCalendarUrl, generateICS } from "@/lib/utils";
 import { IslamicGeometryLine } from "@/components/ui/OrnamentalDivider";
@@ -62,6 +62,9 @@ function CardButton({
     </motion.a>
   );
 }
+
+const INVITATION_IMAGE = "/invitation.jpg";
+const INVITATION_FILENAME = "eslam-selma-invitation.jpg";
 
 const ICON_COLOR = "#8C6D4A";
 
@@ -150,13 +153,54 @@ function CardInner() {
     }
   }
 
-  function handleDownloadClick() {
+  // Pre-fetch the image so the share sheet can be opened synchronously on click.
+  // iOS drops the user-activation token if we await a network request first.
+  const invitationFile = useRef<File | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(INVITATION_IMAGE)
+      .then((res) => (res.ok ? res.blob() : Promise.reject(new Error("fetch failed"))))
+      .then((blob) => {
+        if (!cancelled) {
+          invitationFile.current = new File([blob], INVITATION_FILENAME, {
+            type: blob.type || "image/jpeg",
+          });
+        }
+      })
+      .catch(() => {
+        /* fall back to a plain download */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function saveViaAnchor() {
     const a = document.createElement("a");
-    a.href = "/invitation.jpg";
-    a.download = "eslam-selma-invitation.jpg";
+    a.href = INVITATION_IMAGE;
+    a.download = INVITATION_FILENAME;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+  }
+
+  async function handleDownloadClick() {
+    const file = invitationFile.current;
+
+    // iOS Safari + Android Chrome: the native share sheet offers
+    // "Save Image" / "Save to Photos", which writes straight to the gallery.
+    if (file && typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+        return;
+      } catch (err) {
+        // User dismissed the sheet — don't then force a file download on them.
+        if (err instanceof DOMException && err.name === "AbortError") return;
+      }
+    }
+
+    saveViaAnchor();
   }
 
   return (
