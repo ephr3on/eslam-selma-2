@@ -2,7 +2,6 @@
 
 import {
   animate,
-  AnimatePresence,
   motion,
   useInView,
   useMotionValue,
@@ -72,19 +71,6 @@ function CardButton({
   );
 }
 
-/** Delay after the card is in view before the "و" begins to transform. */
-const HEART_REVEAL_DELAY_MS = 5000;
-/** How long the "و" gathers light before it dissolves. */
-const WAW_CHARGE_MS = 900;
-
-/**
- * Three-beat sequence for the connector between the names:
- *   waw      — the plain, elegant "و"
- *   charging — it brightens and gathers light
- *   heart    — it has dissolved and the heart has bloomed
- */
-type ConnectorStage = "waw" | "charging" | "heart";
-
 const EASE_SOFT = [0.16, 1, 0.3, 1] as const;
 
 /* ── One continuous light sweep across the whole names line ──────────────────
@@ -94,9 +80,7 @@ const EASE_SOFT = [0.16, 1, 0.3, 1] as const;
  * shimmers that happen to run at once.
  * Tiles seamlessly: the first and last stops are the same gold.
  */
-/** The line's resting gold, and the gentle lift the wave carries. The heart
- *  interpolates between these exact two colours, so its brightness at any
- *  moment is identical to the letters'. */
+/** The line's resting gold, and the gentle lift the wave carries. */
 const GOLD_BASE = "#B8943F";
 const GOLD_CORE = "#DCC488";
 
@@ -119,7 +103,6 @@ type LineGeometry = {
   rightOffset: number;
   connectorOffset: number;
   leftOffset: number;
-  connectorCenter: number;
 };
 
 const EMPTY_GEOMETRY: LineGeometry = {
@@ -128,248 +111,33 @@ const EMPTY_GEOMETRY: LineGeometry = {
   rightOffset: 0,
   connectorOffset: 0,
   leftOffset: 0,
-  connectorCenter: 0,
 };
 
 /**
- * Golden motes released as the "و" dissolves. They drift up and outward,
- * slowly, then fade — light coming apart rather than glitter thrown around.
- */
-const MOTES = [
-  { x: "-0.62em", y: "-0.50em", size: "0.055em", delay: 0.0, duration: 2.1 },
-  { x: "0.58em", y: "-0.44em", size: "0.045em", delay: 0.09, duration: 2.3 },
-  { x: "-0.30em", y: "-0.72em", size: "0.04em", delay: 0.16, duration: 2.0 },
-  { x: "0.34em", y: "-0.68em", size: "0.05em", delay: 0.22, duration: 2.4 },
-  { x: "-0.70em", y: "0.16em", size: "0.035em", delay: 0.3, duration: 1.9 },
-  { x: "0.66em", y: "0.20em", size: "0.045em", delay: 0.36, duration: 2.2 },
-  { x: "0.02em", y: "-0.88em", size: "0.035em", delay: 0.44, duration: 2.5 },
-];
-
-/**
- * The heart lifted from the monogram seal that used to sit below the card —
- * same path, same gold. Sized in `em` so it tracks the couple-names font size.
- */
-function NameHeart({ fill }: { fill?: MotionValue<string> }) {
-  return (
-    <svg
-      viewBox="0 0 12 11"
-      fill="none"
-      aria-hidden="true"
-      style={{ width: "0.52em", height: "0.48em" }}
-    >
-      {/* Fill is interpolated between the very same two golds as the text
-          gradient, so the wave reads at one brightness across the whole line. */}
-      <motion.path
-        d="M6 10.5C6 10.5 0.5 6.5 0.5 3.5C0.5 1.84 1.84 0.5 3.5 0.5C4.5 0.5 5.36 1 6 1.78C6.64 1 7.5 0.5 8.5 0.5C10.16 0.5 11.5 1.84 11.5 3.5C11.5 6.5 6 10.5 6 10.5Z"
-        style={{ fill: fill ?? GOLD_BASE }}
-      />
-    </svg>
-  );
-}
-
-/** The heart's arrival: a light bloom, one slow ring, then a resting halo. */
-function HeartRadiance({
-  reduced,
-  haloBoost,
-}: {
-  reduced: boolean;
-  haloBoost?: MotionValue<number>;
-}) {
-  if (reduced) return null;
-  return (
-    <>
-      {/* Bloom — a single warm swell of light as the heart forms */}
-      <motion.span
-        aria-hidden="true"
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: "1em",
-          height: "1em",
-          background:
-            "radial-gradient(circle, rgba(244,231,196,0.55) 0%, rgba(212,185,106,0.28) 38%, rgba(184,148,63,0) 72%)",
-        }}
-        initial={{ opacity: 0, scale: 0.25 }}
-        animate={{ opacity: [0, 0.75, 0], scale: [0.25, 1.9, 2.5] }}
-        transition={{ duration: 1.7, ease: "easeOut" }}
-      />
-
-      {/* A single, very faint ring opening outward — one breath, not a shockwave */}
-      <motion.span
-        aria-hidden="true"
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: "0.7em",
-          height: "0.7em",
-          border: "1px solid rgba(212,185,106,0.38)",
-        }}
-        initial={{ opacity: 0.55, scale: 0.35 }}
-        animate={{ opacity: 0, scale: 2.4 }}
-        transition={{ duration: 1.9, ease: "easeOut" }}
-      />
-
-      {/* Resting halo — breathes on the same rhythm as the heart */}
-      <motion.span
-        aria-hidden="true"
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: "1.05em",
-          height: "1.05em",
-          background:
-            "radial-gradient(circle, rgba(228,206,150,0.30) 0%, rgba(184,148,63,0) 70%)",
-          // Swells a little further as the sweep passes through.
-          scaleX: haloBoost,
-          scaleY: haloBoost,
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.22, 0.5, 0.22] }}
-        transition={{ duration: 3.6, delay: 1.5, ease: "easeInOut", repeat: Infinity }}
-      />
-    </>
-  );
-}
-
-/**
- * Connector between the two names. An invisible "و" holds the box open so the
- * width and baseline never move; every visible layer sits on top of it.
+ * Connector between the two names — the plain, elegant "و".
+ *
+ * It paints the same gradient image as the names, offset by its own position
+ * in the line, so the light sweep passes straight through it without a seam.
  */
 function CoupleConnector({
   separator,
-  stage,
-  reduced,
   outerRef,
   sweepStyle,
   backgroundPositionX,
-  sweepGlow,
 }: {
   separator: string;
-  stage: ConnectorStage;
-  reduced: boolean;
   outerRef: React.RefObject<HTMLSpanElement | null>;
   sweepStyle: React.CSSProperties;
   backgroundPositionX?: MotionValue<string>;
-  sweepGlow: MotionValue<number>;
 }) {
-  const isHeart = stage === "heart";
-
-  // The heart can't take a text gradient, so it answers the wave by moving its
-  // fill between the gradient's own two golds — no brightness() guesswork, the
-  // lift is identical to the letters'. The drop-shadow stays subtle.
-  const heartFill = useTransform(sweepGlow, [0, 1], [GOLD_BASE, GOLD_CORE]);
-  const heartFilter = useTransform(
-    sweepGlow,
-    (g) => `drop-shadow(0 1px ${(5 + g * 4).toFixed(1)}px rgba(184,148,63,${(0.28 + g * 0.16).toFixed(2)}))`,
-  );
-  const haloBoost = useTransform(sweepGlow, (g) => 0.96 + g * 0.16);
-
   return (
-    <span
+    <motion.span
       ref={outerRef}
       className="relative inline-block align-baseline"
-      style={{ paddingInline: "0.06em" }}
+      style={{ ...sweepStyle, backgroundPositionX, paddingInline: "0.06em" }}
     >
-      {/* Spacer: reserves the exact width + baseline of "و". Never painted. */}
-      <span aria-hidden="true" style={{ visibility: "hidden" }}>
-        {separator}
-      </span>
-
-      {/* Motes released by the dissolve. Outside AnimatePresence so they can
-          outlive the glyph they came from. */}
-      {isHeart && !reduced && (
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        >
-          {MOTES.map((m, i) => (
-            <motion.span
-              key={`mote-${i}`}
-              className="absolute rounded-full"
-              style={{
-                width: m.size,
-                height: m.size,
-                background: "#E7D3A0",
-                boxShadow: "0 0 5px rgba(212,185,106,0.55)",
-              }}
-              initial={{ opacity: 0, scale: 0.2, x: 0, y: 0 }}
-              animate={{ opacity: [0, 0.85, 0], scale: [0.2, 1, 0.35], x: m.x, y: m.y }}
-              transition={{ duration: m.duration, delay: m.delay, ease: "easeOut" }}
-            />
-          ))}
-        </span>
-      )}
-
-      <AnimatePresence mode="wait" initial={false}>
-        {isHeart ? (
-          <motion.span
-            key="heart"
-            className="absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: reduced ? 0.4 : 0.9 }}
-          >
-            <HeartRadiance reduced={reduced} haloBoost={reduced ? undefined : haloBoost} />
-
-            {/* Bloom: opens past its size, then settles. No spring, no bounce. */}
-            <motion.span
-              className="relative inline-flex"
-              initial={{ scale: reduced ? 1 : 0.2 }}
-              animate={{ scale: reduced ? 1 : [0.2, 1.07, 1] }}
-              transition={{ duration: reduced ? 0 : 1.35, times: [0, 0.72, 1], ease: EASE_SOFT }}
-            >
-              {/* Separate element so the resting pulse can't fight the bloom. */}
-              <motion.span
-                className="inline-flex"
-                animate={reduced ? undefined : { scale: [1, 1.07, 1] }}
-                transition={{
-                  duration: 3.6,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  delay: 1.5,
-                }}
-                style={reduced ? undefined : { filter: heartFilter }}
-              >
-                <NameHeart fill={reduced ? undefined : heartFill} />
-              </motion.span>
-            </motion.span>
-          </motion.span>
-        ) : (
-          <motion.span
-            key="waw"
-            className="absolute inset-x-0 top-0 text-center"
-            // Same gradient image as the names, offset by the connector's own
-            // position in the line — so the wave passes straight through it.
-            style={{ ...sweepStyle, backgroundPositionX }}
-            initial={{ opacity: 1, scale: 1 }}
-            // Stage 1: gathers light before letting go.
-            // Every filter keyframe keeps the same blur+drop-shadow shape so
-            // framer interpolates it smoothly instead of snapping.
-            animate={
-              stage === "charging" && !reduced
-                ? {
-                    scale: 1.1,
-                    filter: "blur(0px) drop-shadow(0 0 7px rgba(212,185,106,0.6))",
-                  }
-                : {
-                    scale: 1,
-                    filter: "blur(0px) drop-shadow(0 0 0px rgba(212,185,106,0))",
-                  }
-            }
-            // Stage 2: lifts, softens and comes apart into light.
-            exit={{
-              opacity: 0,
-              scale: 0.45,
-              y: "-0.14em",
-              filter: "blur(7px) drop-shadow(0 0 11px rgba(212,185,106,0.6))",
-            }}
-            transition={{
-              duration: reduced ? 0.3 : stage === "charging" ? WAW_CHARGE_MS / 1000 : 0.85,
-              ease: "easeInOut",
-            }}
-          >
-            {separator}
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </span>
+      {separator}
+    </motion.span>
   );
 }
 
@@ -380,15 +148,7 @@ function CoupleConnector({
  * scale (2× the line width) but offset by its own position, so a single bright
  * core travels right → left through "إسلام" → connector → "سلمى" without a seam.
  */
-function CoupleNames({
-  stage,
-  reduced,
-  isHeart,
-}: {
-  stage: ConnectorStage;
-  reduced: boolean;
-  isHeart: boolean;
-}) {
+function CoupleNames({ reduced }: { reduced: boolean }) {
   const lineRef = useRef<HTMLParagraphElement>(null);
   const rightRef = useRef<HTMLSpanElement>(null);
   const connectorRef = useRef<HTMLSpanElement>(null);
@@ -402,7 +162,6 @@ function CoupleNames({
   const mRight = useMotionValue(0);
   const mConnector = useMotionValue(0);
   const mLeft = useMotionValue(0);
-  const mConnectorCenter = useMotionValue(0);
 
   // Measure once laid out, and again whenever the line resizes (font swap,
   // rotation, viewport change). Offsets are relative to the line's left edge.
@@ -426,14 +185,12 @@ function CoupleNames({
         rightOffset: rightBox.left - lineBox.left,
         connectorOffset: connectorBox.left - lineBox.left,
         leftOffset: leftBox.left - lineBox.left,
-        connectorCenter: connectorBox.left - lineBox.left + connectorBox.width / 2,
       };
 
       mWidth.set(next.width);
       mRight.set(next.rightOffset);
       mConnector.set(next.connectorOffset);
       mLeft.set(next.leftOffset);
-      mConnectorCenter.set(next.connectorCenter);
       setGeo((prev) => (prev.width === next.width && prev.rightOffset === next.rightOffset ? prev : next));
     };
 
@@ -442,10 +199,10 @@ function CoupleNames({
     if (lineRef.current) observer.observe(lineRef.current);
     document.fonts?.ready.then(measure).catch(() => {});
     return () => observer.disconnect();
-  }, [mWidth, mRight, mConnector, mLeft, mConnectorCenter]);
+  }, [mWidth, mRight, mConnector, mLeft]);
 
   // One clock for the entire effect. Everything below reads from it, so the
-  // letters, the connector and the heart can never drift out of phase.
+  // two names and the connector can never drift out of phase.
   const sweep = useMotionValue(0);
   const ready = geo.width > 0 && !reduced;
 
@@ -467,44 +224,22 @@ function CoupleNames({
     return width * 1.3 - progress * width * 1.6;
   });
 
-  // The names lean into each other once the heart lands. Driven by a motion
-  // value so the gradient offset can cancel it out and stay perfectly aligned.
-  const lean = useMotionValue(0);
-  useEffect(() => {
-    const controls = animate(lean, isHeart && !reduced ? -geo.fontSize * 0.05 : 0, {
-      duration: 1.6,
-      ease: EASE_SOFT,
-    });
-    return () => controls.stop();
-  }, [isHeart, reduced, geo.fontSize, lean]);
-  const leanMirror = useTransform(lean, (v) => -v);
-
   const imageWidth = geo.width * SWEEP_IMAGE_SCALE;
 
   // background-position-x per part: the same core position, minus that part's
-  // own offset in the line, minus whatever the part is translated by. The three
-  // gradients therefore line up as one continuous image.
-  const corePos = (core: number, offset: number, dx: number, width: number) =>
-    `${core - offset - dx - width * SWEEP_IMAGE_SCALE * SWEEP_CORE_FRACTION}px`;
+  // own offset in the line. The three gradients therefore line up as one
+  // continuous image.
+  const corePos = (core: number, offset: number, width: number) =>
+    `${core - offset - width * SWEEP_IMAGE_SCALE * SWEEP_CORE_FRACTION}px`;
 
-  const bgRight = useTransform([coreX, mRight, lean, mWidth], ([core, offset, dx, width]: number[]) =>
-    corePos(core, offset, dx, width),
+  const bgRight = useTransform([coreX, mRight, mWidth], ([core, offset, width]: number[]) =>
+    corePos(core, offset, width),
   );
   const bgConnector = useTransform([coreX, mConnector, mWidth], ([core, offset, width]: number[]) =>
-    corePos(core, offset, 0, width),
+    corePos(core, offset, width),
   );
-  const bgLeft = useTransform([coreX, mLeft, leanMirror, mWidth], ([core, offset, dx, width]: number[]) =>
-    corePos(core, offset, dx, width),
-  );
-
-  // How strongly the wave is currently over the connector — 1 at dead centre.
-  const sweepGlow = useTransform(
-    [coreX, mConnectorCenter, mWidth],
-    ([core, center, width]: number[]) => {
-      const radius = width * 0.2;
-      if (radius <= 0) return 0;
-      return Math.max(0, 1 - Math.abs(core - center) / radius);
-    },
+  const bgLeft = useTransform([coreX, mLeft, mWidth], ([core, offset, width]: number[]) =>
+    corePos(core, offset, width),
   );
 
   const sweepStyle: React.CSSProperties = ready
@@ -527,23 +262,20 @@ function CoupleNames({
       <motion.span
         ref={rightRef}
         className="inline-block"
-        style={{ ...nameStyle, backgroundPositionX: ready ? bgRight : undefined, x: lean }}
+        style={{ ...nameStyle, backgroundPositionX: ready ? bgRight : undefined }}
       >
         {invitationData.cardText.coupleParts.right}
       </motion.span>{" "}
       <CoupleConnector
         separator={invitationData.cardText.coupleParts.separator}
-        stage={stage}
-        reduced={reduced}
         outerRef={connectorRef}
         sweepStyle={sweepStyle}
         backgroundPositionX={ready ? bgConnector : undefined}
-        sweepGlow={sweepGlow}
       />{" "}
       <motion.span
         ref={leftRef}
         className="inline-block"
-        style={{ ...nameStyle, backgroundPositionX: ready ? bgLeft : undefined, x: leanMirror }}
+        style={{ ...nameStyle, backgroundPositionX: ready ? bgLeft : undefined }}
       >
         {invitationData.cardText.coupleParts.left}
       </motion.span>
@@ -622,30 +354,7 @@ function CardInner() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-5% 0px" });
 
-  // Separate, *repeating* observer: the 5s countdown only runs while the card
-  // is actually on screen, and restarts if the guest scrolls away and back.
-  const isOnScreen = useInView(ref, { margin: "-5% 0px" });
   const reduced = useReducedMotion() ?? false;
-  const [stage, setStage] = useState<ConnectorStage>("waw");
-
-  // Beat 1 — five seconds on screen, then the "و" starts to gather light.
-  useEffect(() => {
-    if (!isOnScreen || stage !== "waw") return;
-    const timer = setTimeout(
-      () => setStage(reduced ? "heart" : "charging"),
-      HEART_REVEAL_DELAY_MS,
-    );
-    return () => clearTimeout(timer); // scrolled away / unmounted
-  }, [isOnScreen, stage, reduced]);
-
-  // Beat 2 — once it's glowing, let it run to the heart regardless of scroll.
-  useEffect(() => {
-    if (stage !== "charging") return;
-    const timer = setTimeout(() => setStage("heart"), WAW_CHARGE_MS);
-    return () => clearTimeout(timer);
-  }, [stage]);
-
-  const isHeart = stage === "heart";
 
   function handleCalendarClick() {
     const ua = navigator.userAgent;
@@ -884,9 +593,8 @@ function CardInner() {
                 className="relative flex flex-col items-center"
                 style={{ marginTop: "1.3rem", marginBottom: "0.15rem" }}
               >
-                {/* Light bloom behind the union. It fades in with the names and
-                    stays — so the transformation only makes it breathe, rather
-                    than switching a shadow on out of nowhere. */}
+                {/* Light bloom behind the union — fades in with the names and
+                    stays, so the line always sits on a little warmth. */}
                 {!reduced && (
                   <motion.span
                     aria-hidden="true"
@@ -902,22 +610,12 @@ function CardInner() {
                         "radial-gradient(ellipse at center, rgba(236,217,154,0.17) 0%, rgba(212,185,106,0.07) 38%, rgba(184,148,63,0) 70%)",
                     }}
                     initial={{ opacity: 0, scale: 0.96 }}
-                    animate={
-                      inView
-                        ? isHeart
-                          ? { opacity: [0.75, 1, 0.8], scale: [1, 1.05, 1] }
-                          : { opacity: 0.75, scale: 1 }
-                        : { opacity: 0, scale: 0.96 }
-                    }
-                    transition={
-                      isHeart
-                        ? { duration: 2.6, times: [0, 0.4, 1], ease: EASE_SOFT }
-                        : { duration: 1.8, delay: 1.5, ease: EASE_SOFT }
-                    }
+                    animate={inView ? { opacity: 0.75, scale: 1 } : { opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 1.8, delay: 1.5, ease: EASE_SOFT }}
                   />
                 )}
 
-                <CoupleNames stage={stage} reduced={reduced} isHeart={isHeart} />
+                <CoupleNames reduced={reduced} />
               </motion.div>
 
               {/* 5 · Closing line */}
