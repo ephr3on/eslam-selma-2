@@ -46,6 +46,11 @@ export const invitationData = {
     },
     invitationLine: "بدعوتكم لمشاركتنا فرحتنا بحفل زفافنا",
     couple: "إسلام و سلمى",
+    coupleParts: {
+      right: "إسلام",
+      separator: "و",
+      left: "سلمى",
+    },
     closing: "وحضور لحظة نبدأ بها فصلًا جديدًا من حياتنا",
   },
   poeticLines: [
