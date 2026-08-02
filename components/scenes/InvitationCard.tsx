@@ -42,8 +42,8 @@ function CardButton({
 }) {
   const shared = {
     "aria-label": ariaLabel,
-    className: "inline-flex flex-1 basis-0 min-w-0 items-center justify-center gap-1.5 font-handicrafts text-xs whitespace-nowrap px-3 py-3 rounded-sm transition-all duration-300 select-none",
-    style: buttonStyle[variant],
+    className: "inline-flex flex-1 basis-0 min-w-0 h-11 flex-row items-center justify-center gap-0.5 font-handicrafts whitespace-nowrap px-1 rounded-sm transition-all duration-300 select-none",
+    style: { ...buttonStyle[variant], fontSize: "0.72rem", lineHeight: 1.2 },
     whileHover: {
       scale: 1.02,
       boxShadow: variant === "primary"
@@ -148,6 +148,15 @@ function CardInner() {
     } else {
       window.open(buildGoogleCalendarUrl(invitationData.calendarEvent), "_blank", "noopener,noreferrer");
     }
+  }
+
+  function handleDownloadClick() {
+    const a = document.createElement("a");
+    a.href = "/invitation.jpg";
+    a.download = "eslam-selma-invitation.jpg";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   return (
@@ -396,33 +405,46 @@ function CardInner() {
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 1.5, duration: 0.8 }}
-              className="flex flex-row items-stretch justify-center gap-2 w-full max-w-[290px] mx-auto"
+              className="flex flex-row items-stretch justify-center gap-1.5 w-full max-w-[300px] mx-auto"
             >
-              <CardButton
-                href={invitationData.mapUrl}
-                ariaLabel="افتح الخريطة في تطبيق الخرائط"
-                variant="primary"
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M7 1C4.79 1 3 2.79 3 5c0 3.5 4 8 4 8s4-4.5 4-8c0-2.21-1.79-4-4-4Z" stroke="currentColor" strokeWidth="1.2" fill="none" />
-                  <circle cx="7" cy="5" r="1.5" fill="currentColor" opacity="0.8" />
-                </svg>
-                افتح الخريطة
-              </CardButton>
-
               <CardButton
                 onClick={handleCalendarClick}
                 ariaLabel="أضف حفل الزفاف إلى التقويم"
                 variant="secondary"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.2" fill="none" />
                   <line x1="1" y1="5" x2="13" y2="5" stroke="currentColor" strokeWidth="1" />
                   <line x1="4" y1="1" x2="4" y2="3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                   <line x1="10" y1="1" x2="10" y2="3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                   <circle cx="7" cy="9" r="1" fill="currentColor" opacity="0.6" />
                 </svg>
-                أضف إلى التقويم
+                احفظ التاريخ
+              </CardButton>
+
+              <CardButton
+                href={invitationData.mapUrl}
+                ariaLabel="افتح الخريطة في تطبيق الخرائط"
+                variant="primary"
+              >
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M7 1C4.79 1 3 2.79 3 5c0 3.5 4 8 4 8s4-4.5 4-8c0-2.21-1.79-4-4-4Z" stroke="currentColor" strokeWidth="1.2" fill="none" />
+                  <circle cx="7" cy="5" r="1.5" fill="currentColor" opacity="0.8" />
+                </svg>
+                موقع القاعة
+              </CardButton>
+
+              <CardButton
+                onClick={handleDownloadClick}
+                ariaLabel="حمّل صورة الدعوة"
+                variant="secondary"
+              >
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M7 1.5v7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                  <path d="M4.2 5.9 7 8.7l2.8-2.8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  <path d="M2 10.2v1.3A1.2 1.2 0 0 0 3.2 12.7h7.6A1.2 1.2 0 0 0 12 11.5v-1.3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+                </svg>
+                حمّل الدعوة
               </CardButton>
             </motion.div>
           </div>
