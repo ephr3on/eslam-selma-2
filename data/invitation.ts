@@ -40,7 +40,7 @@ export const invitationData = {
   cardText: {
     intro: "بكل الود يتشرف",
     hosts: {
-      right: "د. يوسف شريف",
+      right: "د. يوسف شوقي",
       separator: "و",
       left: "د. الأزهر خريجي",
     },

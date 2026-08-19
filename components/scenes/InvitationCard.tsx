@@ -283,8 +283,8 @@ function CoupleNames({ reduced }: { reduced: boolean }) {
   );
 }
 
-const INVITATION_IMAGE = "/invitation.jpg";
-const INVITATION_FILENAME = "eslam-selma-invitation.jpg";
+const INVITATION_IMAGE = "/invitation.png";
+const INVITATION_FILENAME = "eslam-selma-invitation.png";
 
 const ICON_COLOR = "#8C6D4A";
 
